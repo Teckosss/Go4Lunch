@@ -1,3 +1,21 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
+
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">216967635623849</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb216967635623849</string>
+
+    <!-- TOOLBAR -->
+    <string name="hungry">I\'m Hungry!</string>
+    <string name="available">Available workmates</string>
+    <string name="search">Search</string>
+
+    <!-- BOTTOM MENU -->
+    <string name="bottom_menu_map">Map view</string>
+    <string name="bottom_menu_list">List view</string>
+    <string name="bottom_menu_mates">Workmates</string>
+
+    <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
+    <string name="error_no_internet">Aucune connexion internet !</string>
+    <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
 </resources>
