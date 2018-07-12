@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "532067434502",
+    "firebase_url": "https://go4lunch-4d7cc.firebaseio.com",
+    "project_id": "go4lunch-4d7cc",
+    "storage_bucket": "go4lunch-4d7cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532067434502:android:fa75761b58412118",
+        "android_client_info": {
+          "package_name": "com.deguffroy.adrien.go4lunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532067434502-kcpacln72gnhkchfiuq0t3unam0njfdg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deguffroy.adrien.go4lunch",
+            "certificate_hash": "91fba23228cf36bf8ed93d8edbdf4b6199e42170"
+          }
+        },
+        {
+          "client_id": "532067434502-e9um5vbbijgemm7c0j1uhcl8inhupavg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChJy-NaEXz0faOXG9_iP-s8uIwyaEqgVI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532067434502-e9um5vbbijgemm7c0j1uhcl8inhupavg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
