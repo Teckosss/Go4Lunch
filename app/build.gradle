@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
+apply plugin: 'io.fabric'
 
 jacoco {
     toolVersion = "0.8.0"
@@ -40,6 +41,13 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
+    //GLIDE
+    implementation 'com.github.bumptech.glide:glide:4.3.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
+
+    //GLIDE TRANSFORMATIONS
+    implementation 'jp.wasabeef:glide-transformations:3.3.0'
+
     //FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.1'
 
@@ -49,6 +57,11 @@ dependencies {
 
     //FACEBOOK LOGIN
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+
+    //Crashlytic
+    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
