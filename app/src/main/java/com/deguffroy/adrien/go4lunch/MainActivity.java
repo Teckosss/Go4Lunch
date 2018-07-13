@@ -1,12 +1,12 @@
 package com.deguffroy.adrien.go4lunch;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,10 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
-import com.deguffroy.adrien.go4lunch.Models.User;
+import com.deguffroy.adrien.go4lunch.Fragments.MainFragment;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -34,14 +32,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -54,6 +50,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int RC_SIGN_IN = 123;
     private static final int SIGN_OUT_TASK = 10;
 
+    public static final String TITLE_HUNGRY = "I'm Hungry!";
+    public static final String  TITLE_WORKMATES = "Available workmates";
+
+    //Identity each fragment with a number
+    public static final int  FRAGMENT_MAPVIEW = 0;
+    public static final int  FRAGMENT_LISTVIEW = 1;
+    public static final int  FRAGMENT_MATES = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +69,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         this.updateUIWhenCreating();
-
         this.configureNavigationView();
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureBottomView();
+
+        this.showFragment(FRAGMENT_MAPVIEW);
     }
 
     @Override
@@ -91,6 +96,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setLogo(R.drawable.meal)
                         .build(),
                 RC_SIGN_IN);
+    }
+
+    // ---------------------
+    // FRAGMENTS
+    // ---------------------
+
+    private void showFragment(int fragmentIdentifier){
+        // Create new fragment and transaction
+        Fragment newFragment = MainFragment.newInstance(fragmentIdentifier);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack if needed
+        transaction.replace(R.id.fragment_view, newFragment);
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
     }
 
     // ---------------------
@@ -127,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Configure Toolbar
     private void configureToolBar(){
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(TITLE_HUNGRY);
     }
 
     // Configure Drawer Layout
@@ -167,16 +191,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         switch (item.getItemId()) {
 
                             case R.id.map:
-                                //Action quand onglet 1 sélectionné
-                                Toast.makeText(MainActivity.this, "Click on Map", Toast.LENGTH_SHORT).show();
+                                getSupportActionBar().setTitle(TITLE_HUNGRY);
+                                showFragment(FRAGMENT_MAPVIEW);
                                 break;
                             case R.id.list:
-                                //Action quand onglet 2 sélectionné
-                                Toast.makeText(MainActivity.this, "Click on List", Toast.LENGTH_SHORT).show();
+                                getSupportActionBar().setTitle(TITLE_HUNGRY);
+                                showFragment(FRAGMENT_LISTVIEW);
                                 break;
                             case R.id.mates:
-                                //Action quand onglet 3 sélectionné
-                                Toast.makeText(MainActivity.this, "Click on Mates", Toast.LENGTH_SHORT).show();
+                                getSupportActionBar().setTitle(TITLE_WORKMATES);
+                                showFragment(FRAGMENT_MATES);
                                 break;
                         }
                         return true;
@@ -200,13 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             Glide.with(this)
                     .load(R.drawable.lunch)
-                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(40)))
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(30)))
                     .into(mImageView_bk);
-
-            ColorMatrix colorMatrix = new ColorMatrix();
-            colorMatrix.setSaturation(.15f);
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
-            mImageView_bk.setColorFilter(filter);
 
             //Get picture URL from Firebase
             if (this.getCurrentUser().getPhotoUrl() != null) {
