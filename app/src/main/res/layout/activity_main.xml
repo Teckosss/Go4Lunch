@@ -25,14 +25,14 @@
             android:background="@color/colorPrimaryDark"
             app:theme="@style/ToolBarStyle" />
 
-        <FrameLayout
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/fragment_view"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/simple_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/simple_toolbar" />
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navigation"
@@ -51,24 +51,23 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true"
+        android:visibility="visible"
         app:headerLayout="@layout/activity_main_nav_header"
-        app:menu="@menu/activity_main_menu_drawer"
-        android:background="@color/colorPrimary">
+        app:menu="@menu/activity_main_menu_drawer">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/meal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 

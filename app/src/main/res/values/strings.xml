@@ -15,6 +15,9 @@
     <string name="bottom_menu_list">List view</string>
     <string name="bottom_menu_mates">Workmates</string>
 
+    <!-- POPUP TITLE PERM -->
+    <string name="popup_title_perm_access">This application need permissions to work correctly.</string>
+
     <!-- NAVIGATION DRAWER -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -27,4 +30,11 @@
     <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
     <string name="error_no_internet">Aucune connexion internet !</string>
     <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
+
+
+    <string name="restaurant_closed">Closed</string>
+    <string name="restaurant_opening_not_know">Opening hours are not known</string>
+
+
+
 </resources>
