@@ -2,9 +2,4 @@
 <resources>
     <!-- Default NavigationView Header height -->
     <dimen name="nav_header_height">200dp</dimen>
-
-    <!-- Item RecyclerView -->
-    <dimen name="main_picture_size">75dp</dimen>
-    <dimen name="mates_picture_size">20dp</dimen>
-    <dimen name="margin_to_parent">8dp</dimen>
 </resources>
