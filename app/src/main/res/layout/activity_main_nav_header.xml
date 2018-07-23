@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/nav_header_height"
         android:scaleY="1.35"
-        android:tint="@color/colorTint"
+        android:tint="#85000000"
         />
 
     <TextView
