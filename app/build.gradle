@@ -1,10 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco-android'
 apply plugin: 'io.fabric'
 
-jacoco {
-    toolVersion = "0.8.0"
-}
 
 android {
     compileSdkVersion 27
@@ -24,7 +20,12 @@ android {
         }
         debug {
             testCoverageEnabled true
+            resValue 'string', "google_maps_api_key", google_maps_api_key
         }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
@@ -49,6 +50,15 @@ dependencies {
     //GLIDE TRANSFORMATIONS
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
 
+    // FOR RETROFIT
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    // FOR RXJAVA
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+
     //FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.1'
 
@@ -59,6 +69,9 @@ dependencies {
     //FACEBOOK LOGIN
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
+    //EASY PERMISSIONS
+    implementation 'pub.devrel:easypermissions:1.1.1'
+
     //Crashlytic
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
@@ -66,6 +79,7 @@ dependencies {
 
     //GOOGLE PLAY SERVICES
     implementation "com.google.android.gms:play-services-maps:15.0.1"
+    implementation "com.google.android.gms:play-services-places:15.0.1"
     implementation "com.google.android.gms:play-services-location:15.0.1"
 }
 

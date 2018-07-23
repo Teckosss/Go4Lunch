@@ -1,12 +1,12 @@
 package com.deguffroy.adrien.go4lunch;
 
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
-import com.deguffroy.adrien.go4lunch.Fragments.MainFragment;
+import com.deguffroy.adrien.go4lunch.Fragments.ListFragment;
+import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int RC_SIGN_IN = 123;
     private static final int SIGN_OUT_TASK = 10;
 
-    public static final String TITLE_HUNGRY = "I'm Hungry!";
-    public static final String  TITLE_WORKMATES = "Available workmates";
+    public static final int TITLE_HUNGRY = R.string.hungry;
+    public static final int  TITLE_WORKMATES = R.string.available;
 
     //Identity each fragment with a number
     public static final int  FRAGMENT_MAPVIEW = 0;
@@ -103,15 +105,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // ---------------------
 
     private void showFragment(int fragmentIdentifier){
-        // Create new fragment and transaction
-        Fragment newFragment = MainFragment.newInstance(fragmentIdentifier);
+        Fragment newFragment = new Fragment();
+        switch (fragmentIdentifier){
+            case MainActivity.FRAGMENT_MAPVIEW:
+                newFragment = MapFragment.newInstance();
+                Log.e("Show Fragment", ""+MainActivity.FRAGMENT_MAPVIEW );
+                break;
+            case MainActivity.FRAGMENT_LISTVIEW:
+                newFragment = ListFragment.newInstance();
+                Log.e("Show Fragment", ""+MainActivity.FRAGMENT_LISTVIEW );
+                break;
+            case MainActivity.FRAGMENT_MATES:
+                Log.e("Show Fragment", ""+MainActivity.FRAGMENT_MATES );
+                break;
+        }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack if needed
         transaction.replace(R.id.fragment_view, newFragment);
         transaction.addToBackStack(null);
-
         // Commit the transaction
         transaction.commit();
     }
