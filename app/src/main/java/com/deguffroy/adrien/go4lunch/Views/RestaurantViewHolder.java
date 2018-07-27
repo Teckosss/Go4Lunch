@@ -31,8 +31,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_textview_mates) TextView mMatesText;
     @BindView(R.id.item_textview_opening) TextView mOpeningText;
 
-    private Disposable disposable;
-
     public RestaurantViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);

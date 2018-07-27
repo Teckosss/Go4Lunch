@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Fragments.ListFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
+import com.deguffroy.adrien.go4lunch.Fragments.MatesFragment;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int  FRAGMENT_LISTVIEW = 1;
     public static final int  FRAGMENT_MATES = 2;
 
+    public static String CURRENT_USER;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (!this.isCurrentUserLogged()){
             this.startSignInActivity();
+        }else{
+            CURRENT_USER = getCurrentUser().getUid();
         }
 
         this.updateUIWhenCreating();
@@ -116,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.e("Show Fragment", ""+MainActivity.FRAGMENT_LISTVIEW );
                 break;
             case MainActivity.FRAGMENT_MATES:
+                newFragment = MatesFragment.newInstance();
                 Log.e("Show Fragment", ""+MainActivity.FRAGMENT_MATES );
                 break;
         }
@@ -286,8 +292,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
-
-            UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
+            CURRENT_USER = uid;
+            UserHelper.createUser(uid, username, urlPicture, null).addOnFailureListener(this.onFailureListener());
         }
     }
 

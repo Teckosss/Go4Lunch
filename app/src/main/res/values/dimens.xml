@@ -5,6 +5,8 @@
 
     <!-- Item RecyclerView -->
     <dimen name="main_picture_size">75dp</dimen>
+    <dimen name="main_mates_picture_size">50dp</dimen>
     <dimen name="mates_picture_size">20dp</dimen>
     <dimen name="margin_to_parent">8dp</dimen>
+    <dimen name="space_between_word">4dp</dimen>
 </resources>

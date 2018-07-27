@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/mates_main_picture"
+        android:layout_width="@dimen/main_mates_picture_size"
+        android:layout_height="@dimen/main_mates_picture_size"
+        android:layout_margin="@dimen/margin_to_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/mates_textview_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adrien"
+        android:layout_marginStart="@dimen/margin_to_parent"
+        app:layout_constraintStart_toEndOf="@id/mates_main_picture"
+        app:layout_constraintTop_toTopOf="@id/mates_main_picture"
+        app:layout_constraintBottom_toBottomOf="@id/mates_main_picture"
+        />
+
+    <TextView
+        android:id="@+id/mates_textview_eatingAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_between_word"
+        app:layout_constraintStart_toEndOf="@id/mates_textview_username"
+        app:layout_constraintTop_toTopOf="@id/mates_main_picture"
+        app:layout_constraintBottom_toBottomOf="@id/mates_main_picture"
+        />
+
+    <TextView
+        android:id="@+id/mates_textview_restaurant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_between_word"
+        app:layout_constraintStart_toEndOf="@id/mates_textview_eatingAt"
+        app:layout_constraintTop_toTopOf="@id/mates_main_picture"
+        app:layout_constraintBottom_toBottomOf="@id/mates_main_picture"
+        />
+
+</android.support.constraint.ConstraintLayout>

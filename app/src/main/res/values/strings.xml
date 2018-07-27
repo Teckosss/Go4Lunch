@@ -34,6 +34,6 @@
     <string name="restaurant_closed">Closed</string>
     <string name="restaurant_opening_not_know">Opening hours are not known</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mates_is_eating_at">is eating at</string>.
+    <string name="mates_hasnt_decided">hasn\'t decided yet</string>
 </resources>
