@@ -1,6 +1,9 @@
 package com.deguffroy.adrien.go4lunch.Fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,12 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.deguffroy.adrien.go4lunch.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.Result;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.DividerItemDecoration;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
+import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.deguffroy.adrien.go4lunch.Views.RestaurantAdapter;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -37,6 +45,8 @@ public class ListFragment extends Fragment {
     private List<Result> mResults;
     private RestaurantAdapter adapter;
 
+    private CommunicationViewModel mViewModel;
+
     public static ListFragment newInstance() {
         return new ListFragment();
     }
@@ -47,8 +57,14 @@ public class ListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, view);
 
-        this.configureRecyclerView();
-        this.executeHttpRequestWithRetrofit();
+        mViewModel = ViewModelProviders.of(getActivity()).get(CommunicationViewModel.class);
+        mViewModel.currentUserPosition.observe(this, new Observer<LatLng>() {
+            @Override
+            public void onChanged(@Nullable LatLng latLng) {
+               configureRecyclerView();
+               executeHttpRequestWithRetrofit();
+            }
+        });
         return view;
     }
 
@@ -65,7 +81,7 @@ public class ListFragment extends Fragment {
     // Configure RecyclerView, Adapter, LayoutManager & glue it together
     private void configureRecyclerView(){
         this.mResults = new ArrayList<>();
-        this.adapter = new RestaurantAdapter(this.mResults);
+        this.adapter = new RestaurantAdapter(this.mResults, mViewModel.getCurrentUserPositionFormatted());
         this.mRecyclerView.setAdapter(this.adapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.divider));
@@ -77,7 +93,7 @@ public class ListFragment extends Fragment {
     // -------------------
 
     private void executeHttpRequestWithRetrofit(){
-        this.disposable = PlacesStreams.streamFetchNearbyPlaces(MapFragment.location, MapFragment.SEARCH_RADIUS, MapFragment.SEARCH_TYPE,MapFragment.API_KEY).subscribeWith(createObserver());
+        this.disposable = PlacesStreams.streamFetchNearbyPlaces(mViewModel.getCurrentUserPositionFormatted(), MapFragment.SEARCH_RADIUS, MapFragment.SEARCH_TYPE,MapFragment.API_KEY).subscribeWith(createObserver());
     }
 
     private <T> DisposableObserver<T> createObserver(){

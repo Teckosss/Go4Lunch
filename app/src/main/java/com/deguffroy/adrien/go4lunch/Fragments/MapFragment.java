@@ -2,6 +2,8 @@ package com.deguffroy.adrien.go4lunch.Fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
+import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -59,15 +62,15 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     public static final String API_KEY = "AIzaSyAUayt1xNiRgY4sCb5Zw0XpofM18nY7pt8";
     public static final int SEARCH_RADIUS = 1000;
     public static final String  SEARCH_TYPE = "restaurant";
-    public static String location;
 
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
-    private LatLng currentLatLng;
     private Disposable disposable;
+
+    private CommunicationViewModel mViewModel;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -78,6 +81,13 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, rootView);
 
+        mViewModel = ViewModelProviders.of(getActivity()).get(CommunicationViewModel.class);
+        mViewModel.currentUserPosition.observe(this, new Observer<LatLng>() {
+            @Override
+            public void onChanged(@Nullable LatLng latLng) {
+               executeHttpRequestWithRetrofit();
+            }
+        });
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         this.configureMapView();
@@ -156,11 +166,10 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     private void handleNewLocation(Location location) {
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
-        currentLatLng = new LatLng(currentLatitude, currentLongitude);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
+        this.mViewModel.updateCurrentUserPosition(new LatLng(currentLatitude, currentLongitude));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(this.mViewModel.getCurrentUserPosition()));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.mViewModel.getCurrentUserPosition(), DEFAULT_ZOOM));
         stopLocationUpdates();
-        this.executeHttpRequestWithRetrofit(currentLatLng.toString());
     }
 
     @Override
@@ -195,10 +204,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     // HTTP (RxJAVA)
     // -------------------
 
-    private void executeHttpRequestWithRetrofit(String latLng){
-        location = latLng.replace("lat/lng: (", "");
-        location = location.replace(")", "");
-        Log.e(TAG, "Location:"+location );
+    private void executeHttpRequestWithRetrofit(){
+        String location = mViewModel.getCurrentUserPositionFormatted();
+        Log.e(TAG, "Location: "+location );
         this.disposable = PlacesStreams.streamFetchNearbyPlaces(location,SEARCH_RADIUS,SEARCH_TYPE,API_KEY).subscribeWith(createObserver());
     }
 

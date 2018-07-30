@@ -18,10 +18,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     // FOR DATA
     private List<Result> mResults;
+    private String mLocation;
 
     // CONSTRUCTOR
-    public RestaurantAdapter(List<Result> result) {
+    public RestaurantAdapter(List<Result> result, String location) {
         this.mResults = result;
+        this.mLocation = location;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     @Override
     public void onBindViewHolder(RestaurantViewHolder viewHolder, int position) {
-        viewHolder.updateWithData(this.mResults.get(position));
+        viewHolder.updateWithData(this.mResults.get(position), this.mLocation);
     }
 
     @Override

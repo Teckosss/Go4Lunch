@@ -34,6 +34,7 @@
     <string name="restaurant_closed">Closed</string>
     <string name="restaurant_opening_not_know">Opening hours are not known</string>
 
-    <string name="mates_is_eating_at">is eating at</string>.
+    <string name="mates_is_eating_at">is eating at</string>
     <string name="mates_hasnt_decided">hasn\'t decided yet</string>
+    <string name="list_unit_distance">m</string>
 </resources>
