@@ -12,14 +12,23 @@ public class User {
     private String urlPicture;
     @Nullable
     private String restaurantSelected;
+    @Nullable
+    private int searchRadius;
+    @Nullable
+    private int defaultZoom;
+    @Nullable
+    private boolean isNotificationOn;
 
     public User() { }
 
-    public User(String uid, String username, @Nullable String urlPicture, @Nullable String restaurantSelected) {
+    public User(String uid, String username, @Nullable String urlPicture, @Nullable String restaurantSelected, @Nullable int searchRadius, @Nullable int defaultZoom, @Nullable boolean isNotificationOn) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
         this.restaurantSelected = restaurantSelected;
+        this.searchRadius = searchRadius;
+        this.defaultZoom = defaultZoom;
+        this.isNotificationOn = isNotificationOn;
     }
 
     // --- GETTERS ---
@@ -30,10 +39,36 @@ public class User {
     @Nullable
     public String getRestaurantSelected(){ return restaurantSelected; }
 
+    @Nullable
+    public int getSearchRadius() {
+        return searchRadius;
+    }
+
+    @Nullable
+    public int getDefaultZoom() {
+        return defaultZoom;
+    }
+
+    @Nullable
+    public boolean isNotificationOn() {
+        return isNotificationOn;
+    }
+
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
     public void setUid(String uid) { this.uid = uid; }
     public void setUrlPicture(@Nullable String urlPicture) { this.urlPicture = urlPicture; }
     public void setRestaurantSelected(@Nullable String restaurantSelected) { this.restaurantSelected = restaurantSelected; }
 
+    public void setSearchRadius(@Nullable int searchRadius) {
+        this.searchRadius = searchRadius;
+    }
+
+    public void setDefaultZoom(@Nullable int defaultZoom) {
+        this.defaultZoom = defaultZoom;
+    }
+
+    public void setNotificationOn(@Nullable boolean notificationOn) {
+        isNotificationOn = notificationOn;
+    }
 }

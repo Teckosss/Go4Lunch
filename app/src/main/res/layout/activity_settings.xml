@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.SettingsActivity">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/settings_zoom_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_zoom_text"
+        android:layout_margin="@dimen/margin_to_parent"
+        app:layout_constraintTop_toBottomOf="@+id/simple_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/settings_zoom_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_to_parent"
+        app:layout_constraintStart_toEndOf="@+id/settings_zoom_text"
+        app:layout_constraintTop_toTopOf="@id/settings_zoom_text"
+        app:layout_constraintBottom_toBottomOf="@id/settings_zoom_text"
+        />
+
+    <TextView
+        android:id="@+id/settings_radius_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_search_radius_text"
+        android:layout_margin="@dimen/margin_to_parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_zoom_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/settings_radius_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_to_parent"
+        app:layout_constraintStart_toEndOf="@+id/settings_radius_text"
+        app:layout_constraintTop_toTopOf="@id/settings_radius_text"
+        app:layout_constraintBottom_toBottomOf="@id/settings_radius_text"
+        />
+
+    <TextView
+        android:id="@+id/settings_notifications_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_notification_text"
+        android:layout_margin="@dimen/margin_to_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_radius_edit"
+        />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_to_parent"
+        app:layout_constraintStart_toEndOf="@id/settings_notifications_text"
+        app:layout_constraintTop_toTopOf="@id/settings_notifications_text"
+        app:layout_constraintBottom_toBottomOf="@id/settings_notifications_text"
+        />
+
+</android.support.constraint.ConstraintLayout>

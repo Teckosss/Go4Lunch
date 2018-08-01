@@ -37,4 +37,9 @@
     <string name="mates_is_eating_at">is eating at</string>
     <string name="mates_hasnt_decided">hasn\'t decided yet</string>
     <string name="list_unit_distance">m</string>
+
+    <!-- SETTINGS ACTIVITY -->
+    <string name="settings_zoom_text">Zoom on map</string>
+    <string name="settings_search_radius_text">Restaurants\'s search radius</string>
+    <string name="settings_notification_text">Notifications</string>
 </resources>

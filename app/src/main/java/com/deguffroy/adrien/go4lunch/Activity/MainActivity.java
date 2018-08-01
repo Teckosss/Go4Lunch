@@ -1,4 +1,4 @@
-package com.deguffroy.adrien.go4lunch;
+package com.deguffroy.adrien.go4lunch.Activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -29,6 +29,7 @@ import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Fragments.ListFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MatesFragment;
+import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -62,6 +63,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int  FRAGMENT_MAPVIEW = 0;
     public static final int  FRAGMENT_LISTVIEW = 1;
     public static final int  FRAGMENT_MATES = 2;
+
+    //Identity each activity with a number
+    public static final int ACTIVITY_SETTINGS = 0;
+
+    //Default data to create user
+    public static final int DEFAULT_ZOOM = 13;
+    public static final int DEFAULT_SEARCH_RADIUS = 1000;
+    public static final boolean DEFAULT_NOTIFICATION = false;
 
     private CommunicationViewModel mViewModel;
 
@@ -139,6 +148,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // ---------------------
+    // ACTIVITY
+    // ---------------------
+
+    private void showActivity(int activityIdentifier){
+        switch (activityIdentifier){
+            case ACTIVITY_SETTINGS:
+                launchActivity(SettingsActivity.class);
+                break;
+        }
+    }
+
+    private void launchActivity(Class mClass){
+        Intent intent = new Intent(this, mClass);
+        startActivity(intent);
+    }
+
+    // ---------------------
     // ACTIONS
     // ---------------------
 
@@ -152,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.drawer_lunch :
                 break;
             case R.id.drawer_settings:
+               showActivity(ACTIVITY_SETTINGS);
                 break;
             case R.id.drawer_logout:
                 this.signOutUserFromFirebase();
@@ -297,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
             this.mViewModel.updateCurrentUserUID(uid);
-            UserHelper.createUser(uid, username, urlPicture, null).addOnFailureListener(this.onFailureListener());
+            UserHelper.createUser(uid, username, urlPicture, null, DEFAULT_SEARCH_RADIUS, DEFAULT_ZOOM, DEFAULT_NOTIFICATION).addOnFailureListener(this.onFailureListener());
         }
     }
 

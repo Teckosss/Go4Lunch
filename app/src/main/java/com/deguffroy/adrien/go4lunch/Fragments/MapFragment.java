@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.BuildConfig;
+import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
@@ -58,11 +59,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     //https://maps.googleapis.com/maps/api/place/photo?photoreference=CmRaAAAAi8gLNJVwnnzV-3lQSlgSjx03IaUenRFSfP7geD2hQdsZriJQBxqm9HJ1udK4ZrD1KQwxpE0-qwjtOEcTF2F594RclQQNVtQB2_S3FQ_Du8xQLI6jwRiYBqRWyrVnMUnsEhA0OtBDmtdBRYSuJbA4ii_6GhQWS-aDcY-HBjKZiqEqh7qyxhbazA&key=AIzaSyAUayt1xNiRgY4sCb5Zw0XpofM18nY7pt8
     //https://maps.googleapis.com/maps/api/place/photo?maxwidth=75&maxheight=75&photoreference=CmRaAAAAi8gLNJVwnnzV-3lQSlgSjx03IaUenRFSfP7geD2hQdsZriJQBxqm9HJ1udK4ZrD1KQwxpE0-qwjtOEcTF2F594RclQQNVtQB2_S3FQ_Du8xQLI6jwRiYBqRWyrVnMUnsEhA0OtBDmtdBRYSuJbA4ii_6GhQWS-aDcY-HBjKZiqEqh7qyxhbazA&key=AIzaSyAUayt1xNiRgY4sCb5Zw0XpofM18nY7pt8
     private static final int PERMS_FINE_COARSE_LOCATION = 100;
-    private static final int DEFAULT_ZOOM = 13;
     private static final String TAG = MapFragment.class.getSimpleName();
     private static final String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     public static final String API_KEY = BuildConfig.google_maps_api_key;
-    public static final int SEARCH_RADIUS = 1000;
     public static final String  SEARCH_TYPE = "restaurant";
 
     private GoogleMap googleMap;
@@ -170,7 +169,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         double currentLongitude = location.getLongitude();
         this.mViewModel.updateCurrentUserPosition(new LatLng(currentLatitude, currentLongitude));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(this.mViewModel.getCurrentUserPosition()));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.mViewModel.getCurrentUserPosition(), DEFAULT_ZOOM));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.mViewModel.getCurrentUserPosition(), MainActivity.DEFAULT_ZOOM));
         stopLocationUpdates();
     }
 
@@ -209,7 +208,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     private void executeHttpRequestWithRetrofit(){
         String location = mViewModel.getCurrentUserPositionFormatted();
         Log.e(TAG, "Location: "+location );
-        this.disposable = PlacesStreams.streamFetchNearbyPlaces(location,SEARCH_RADIUS,SEARCH_TYPE,API_KEY).subscribeWith(createObserver());
+        this.disposable = PlacesStreams.streamFetchNearbyPlaces(location,MainActivity.DEFAULT_SEARCH_RADIUS,SEARCH_TYPE,API_KEY).subscribeWith(createObserver());
     }
 
     private <T> DisposableObserver<T> createObserver(){

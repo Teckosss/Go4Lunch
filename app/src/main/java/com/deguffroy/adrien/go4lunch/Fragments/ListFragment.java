@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.deguffroy.adrien.go4lunch.MainActivity;
+import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.Result;
 import com.deguffroy.adrien.go4lunch.R;
@@ -93,7 +93,7 @@ public class ListFragment extends Fragment {
     // -------------------
 
     private void executeHttpRequestWithRetrofit(){
-        this.disposable = PlacesStreams.streamFetchNearbyPlaces(mViewModel.getCurrentUserPositionFormatted(), MapFragment.SEARCH_RADIUS, MapFragment.SEARCH_TYPE,MapFragment.API_KEY).subscribeWith(createObserver());
+        this.disposable = PlacesStreams.streamFetchNearbyPlaces(mViewModel.getCurrentUserPositionFormatted(), MainActivity.DEFAULT_SEARCH_RADIUS, MapFragment.SEARCH_TYPE,MapFragment.API_KEY).subscribeWith(createObserver());
     }
 
     private <T> DisposableObserver<T> createObserver(){

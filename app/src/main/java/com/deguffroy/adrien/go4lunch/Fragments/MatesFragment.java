@@ -10,33 +10,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
-import com.deguffroy.adrien.go4lunch.MainActivity;
+import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.DividerItemDecoration;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.deguffroy.adrien.go4lunch.Views.MatesAdapter;
-import com.deguffroy.adrien.go4lunch.Views.RestaurantAdapter;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -120,7 +108,7 @@ public class MatesFragment extends Fragment {
                             }else{
                                 restaurantSelected = document.getData().get("restaurantSelected").toString();
                             }
-                            User userToAdd = new User(uid,username,urlPicture,restaurantSelected);
+                            User userToAdd = new User(uid,username,urlPicture,restaurantSelected, MainActivity.DEFAULT_SEARCH_RADIUS,MainActivity.DEFAULT_ZOOM,false);
                             mUsers.add(userToAdd);
                         }
                     }
