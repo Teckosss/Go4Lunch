@@ -1,5 +1,6 @@
 package com.deguffroy.adrien.go4lunch;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Fragments.ListFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MatesFragment;
+import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int  FRAGMENT_LISTVIEW = 1;
     public static final int  FRAGMENT_MATES = 2;
 
-    public static String CURRENT_USER;
+    private CommunicationViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +71,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        mViewModel = ViewModelProviders.of(this).get(CommunicationViewModel.class);
+
         if (!this.isCurrentUserLogged()){
             this.startSignInActivity();
         }else{
-            CURRENT_USER = getCurrentUser().getUid();
+            this.mViewModel.updateCurrentUserUID(getCurrentUser().getUid());
         }
 
         this.updateUIWhenCreating();
@@ -292,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
-            CURRENT_USER = uid;
+            this.mViewModel.updateCurrentUserUID(uid);
             UserHelper.createUser(uid, username, urlPicture, null).addOnFailureListener(this.onFailureListener());
         }
     }

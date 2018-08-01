@@ -1,8 +1,11 @@
 package com.deguffroy.adrien.go4lunch.Fragments;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +23,10 @@ import com.deguffroy.adrien.go4lunch.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.DividerItemDecoration;
+import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.deguffroy.adrien.go4lunch.Views.MatesAdapter;
 import com.deguffroy.adrien.go4lunch.Views.RestaurantAdapter;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,6 +56,8 @@ public class MatesFragment extends Fragment {
     private List<User> mUsers;
     private MatesAdapter mMatesAdapter;
 
+    private CommunicationViewModel mViewModel;
+
     public static MatesFragment newInstance() {
         return new MatesFragment();
     }
@@ -62,8 +69,15 @@ public class MatesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mates, container, false);
         ButterKnife.bind(this, view);
 
-        this.configureRecyclerView();
-        this.updateUIWhenCreating();
+        mViewModel = ViewModelProviders.of(getActivity()).get(CommunicationViewModel.class);
+        mViewModel.currentUserUID.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String uid) {
+                configureRecyclerView();
+                updateUIWhenCreating();
+            }
+        });
+
         return view;
     }
 
@@ -94,7 +108,9 @@ public class MatesFragment extends Fragment {
                 if (task.isSuccessful()){
                     mUsers.clear();
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (!(MainActivity.CURRENT_USER.equals(document.getData().get("uid").toString()))){
+                        //Log.e("TAG", "UID from ViewModel : " + mViewModel.getCurrentUserUID());
+                        //Log.e("TAG", "UID from Document : " + document.getData().get("uid").toString());
+                        if (!(mViewModel.getCurrentUserUID().equals(document.getData().get("uid").toString()))){
                             String uid = document.getData().get("uid").toString();
                             String username = document.getData().get("username").toString();
                             String urlPicture = document.getData().get("urlPicture").toString();

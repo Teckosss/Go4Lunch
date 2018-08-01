@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.deguffroy.adrien.go4lunch.BuildConfig;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
@@ -59,7 +61,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     private static final int DEFAULT_ZOOM = 13;
     private static final String TAG = MapFragment.class.getSimpleName();
     private static final String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-    public static final String API_KEY = "AIzaSyAUayt1xNiRgY4sCb5Zw0XpofM18nY7pt8";
+    public static final String API_KEY = BuildConfig.google_maps_api_key;
     public static final int SEARCH_RADIUS = 1000;
     public static final String  SEARCH_TYPE = "restaurant";
 

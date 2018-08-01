@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class CommunicationViewModel extends ViewModel {
     public final MutableLiveData<LatLng> currentUserPosition = new MutableLiveData<>();
+    public final MutableLiveData<String> currentUserUID = new MutableLiveData<>();
 
     public void updateCurrentUserPosition(LatLng latLng){
         currentUserPosition.setValue(latLng);
@@ -22,5 +23,13 @@ public class CommunicationViewModel extends ViewModel {
     public String getCurrentUserPositionFormatted(){
         String location = currentUserPosition.getValue().toString().replace("lat/lng: (", "");
         return location.replace(")", "");
+    }
+
+    public void updateCurrentUserUID(String uid){
+        currentUserUID.setValue(uid);
+    }
+
+    public String getCurrentUserUID() {
+        return currentUserUID.getValue();
     }
 }
