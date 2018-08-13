@@ -22,8 +22,6 @@ public class MatesViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.mates_main_picture) ImageView mImageView;
     @BindView(R.id.mates_textview_username) TextView mTextView;
-    @BindView(R.id.mates_textview_eatingAt) TextView mTextViewEatingAt;
-    @BindView(R.id.mates_textview_restaurant) TextView mTextViewRestaurant;
 
     public MatesViewHolder(View itemView) {
         super(itemView);
@@ -38,13 +36,10 @@ public class MatesViewHolder extends RecyclerView.ViewHolder {
             glide.load(R.drawable.ic_no_image_available).apply(RequestOptions.circleCropTransform()).into(mImageView);
         }
         if (results.getRestaurantSelected().equals("null")){
-            this.mTextView.setText(results.getUsername());
-            this.mTextViewEatingAt.setText(R.string.mates_hasnt_decided);
+            this.mTextView.setText(itemView.getResources().getString(R.string.mates_hasnt_decided, results.getUsername()));
             this.changeTextColor(R.color.colorGray);
         }else{
-            this.mTextView.setText(results.getUsername());
-            this.mTextViewEatingAt.setText(R.string.mates_is_eating_at);
-            this.mTextViewRestaurant.setText(results.getRestaurantSelected());
+            this.mTextView.setText(itemView.getResources().getString(R.string.mates_is_eating_at, results.getUsername(), results.getRestaurantSelected()));
             this.changeTextColor(R.color.colorBlack);
         }
     }
@@ -52,7 +47,5 @@ public class MatesViewHolder extends RecyclerView.ViewHolder {
     private void changeTextColor(int color){
         int mColor = itemView.getContext().getResources().getColor(color);
         this.mTextView.setTextColor(mColor);
-        this.mTextViewEatingAt.setTextColor(mColor);
-        this.mTextViewRestaurant.setTextColor(mColor);
     }
 }

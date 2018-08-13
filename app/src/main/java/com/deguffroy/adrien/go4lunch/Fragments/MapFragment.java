@@ -56,8 +56,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
 
     @BindView(R.id.mapView) MapView mMapView;
 
-    //https://maps.googleapis.com/maps/api/place/photo?photoreference=CmRaAAAAi8gLNJVwnnzV-3lQSlgSjx03IaUenRFSfP7geD2hQdsZriJQBxqm9HJ1udK4ZrD1KQwxpE0-qwjtOEcTF2F594RclQQNVtQB2_S3FQ_Du8xQLI6jwRiYBqRWyrVnMUnsEhA0OtBDmtdBRYSuJbA4ii_6GhQWS-aDcY-HBjKZiqEqh7qyxhbazA&key=AIzaSyAUayt1xNiRgY4sCb5Zw0XpofM18nY7pt8
-    //https://maps.googleapis.com/maps/api/place/photo?maxwidth=75&maxheight=75&photoreference=CmRaAAAAi8gLNJVwnnzV-3lQSlgSjx03IaUenRFSfP7geD2hQdsZriJQBxqm9HJ1udK4ZrD1KQwxpE0-qwjtOEcTF2F594RclQQNVtQB2_S3FQ_Du8xQLI6jwRiYBqRWyrVnMUnsEhA0OtBDmtdBRYSuJbA4ii_6GhQWS-aDcY-HBjKZiqEqh7qyxhbazA&key=AIzaSyAUayt1xNiRgY4sCb5Zw0XpofM18nY7pt8
     private static final int PERMS_FINE_COARSE_LOCATION = 100;
     private static final String TAG = MapFragment.class.getSimpleName();
     private static final String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -165,6 +163,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     }
 
     private void handleNewLocation(Location location) {
+        Log.e(TAG, "handleNewLocation: " );
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
         this.mViewModel.updateCurrentUserPosition(new LatLng(currentLatitude, currentLongitude));

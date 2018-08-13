@@ -60,9 +60,10 @@
 
     <ImageView
         android:id="@+id/item_imageview_mates"
+        android:src="@drawable/baseline_person_outline_black_36"
         android:layout_width="@dimen/mates_picture_size"
         android:layout_height="@dimen/mates_picture_size"
-        android:layout_marginEnd="@dimen/margin_to_parent"
+        android:layout_marginEnd="@dimen/space_between_word"
         app:layout_constraintTop_toTopOf="@id/item_textview_address"
         app:layout_constraintBottom_toBottomOf="@id/item_textview_address"
         app:layout_constraintEnd_toStartOf="@id/item_textview_mates"
@@ -94,29 +95,31 @@
 
     <ImageView
         android:id="@+id/item_imageview_1star"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginEnd="@dimen/margin_to_parent"
+        android:src="@drawable/baseline_star_rate_black_24"
+        android:tint="@color/colorStar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_between_star"
         app:layout_constraintBottom_toBottomOf="@id/item_imageview_main_pic"
         app:layout_constraintEnd_toStartOf="@id/item_imageview_main_pic"
         />
 
     <ImageView
         android:id="@+id/item_imageview_2star"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginEnd="@dimen/margin_to_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_star_rate_black_24"
+        android:tint="@color/colorStar"
         app:layout_constraintBottom_toBottomOf="@id/item_imageview_main_pic"
-        app:layout_constraintEnd_toStartOf="@id/item_imageview_1star"
-        />
+        app:layout_constraintEnd_toStartOf="@id/item_imageview_1star" />
 
     <ImageView
         android:id="@+id/item_imageview_3star"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginEnd="@dimen/margin_to_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_star_rate_black_24"
+        android:tint="@color/colorStar"
         app:layout_constraintBottom_toBottomOf="@id/item_imageview_main_pic"
-        app:layout_constraintEnd_toStartOf="@id/item_imageview_2star"
-        />
+        app:layout_constraintEnd_toStartOf="@id/item_imageview_2star" />
 
 </android.support.constraint.ConstraintLayout>

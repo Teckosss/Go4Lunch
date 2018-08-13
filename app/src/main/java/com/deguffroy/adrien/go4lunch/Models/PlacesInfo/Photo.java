@@ -11,16 +11,16 @@ import java.util.List;
 public class Photo {
     @SerializedName("height")
     @Expose
-    private Integer height;
+    public Integer height;
     @SerializedName("html_attributions")
     @Expose
-    private List<String> htmlAttributions = null;
+    public List<String> htmlAttributions = null;
     @SerializedName("photo_reference")
     @Expose
-    private String photoReference;
+    public String photoReference;
     @SerializedName("width")
     @Expose
-    private Integer width;
+    public Integer width;
 
     public Integer getHeight() {
         return height;

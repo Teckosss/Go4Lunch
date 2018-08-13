@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName;
 public class Geometry {
     @SerializedName("location")
     @Expose
-    private Location location;
+    public Location location;
     @SerializedName("viewport")
     @Expose
-    private Viewport viewport;
+    public Viewport viewport;
 
     public Location getLocation() {
         return location;

@@ -25,24 +25,4 @@
         app:layout_constraintBottom_toBottomOf="@id/mates_main_picture"
         />
 
-    <TextView
-        android:id="@+id/mates_textview_eatingAt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_between_word"
-        app:layout_constraintStart_toEndOf="@id/mates_textview_username"
-        app:layout_constraintTop_toTopOf="@id/mates_main_picture"
-        app:layout_constraintBottom_toBottomOf="@id/mates_main_picture"
-        />
-
-    <TextView
-        android:id="@+id/mates_textview_restaurant"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_between_word"
-        app:layout_constraintStart_toEndOf="@id/mates_textview_eatingAt"
-        app:layout_constraintTop_toTopOf="@id/mates_main_picture"
-        app:layout_constraintBottom_toBottomOf="@id/mates_main_picture"
-        />
-
 </android.support.constraint.ConstraintLayout>

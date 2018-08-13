@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,6 +41,7 @@ import butterknife.ButterKnife;
 public class MatesFragment extends Fragment {
 
     @BindView(R.id.mates_recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.mates_swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
 
     private List<User> mUsers;
     private MatesAdapter mMatesAdapter;
@@ -89,10 +91,12 @@ public class MatesFragment extends Fragment {
 
     // 1 - Update UI when activity is creating
     private void updateUIWhenCreating(){
+        this.mSwipeRefreshLayout.setRefreshing(true);
         CollectionReference collectionReference = UserHelper.getUsersCollection();
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                mSwipeRefreshLayout.setRefreshing(false);
                 if (task.isSuccessful()){
                     mUsers.clear();
                     for (QueryDocumentSnapshot document : task.getResult()) {

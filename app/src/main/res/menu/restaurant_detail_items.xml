@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/call"
+        android:enabled="true"
+        android:icon="@drawable/baseline_call_black_24"
+        android:title="@string/restaurant_item_call"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/like"
+        android:enabled="true"
+        android:icon="@drawable/baseline_star_rate_black_24"
+        android:title="@string/restaurant_item_like"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/website"
+        android:enabled="true"
+        android:icon="@drawable/baseline_public_black_24"
+        android:title="@string/restaurant_item_website"
+        app:showAsAction="ifRoom" />
+</menu>

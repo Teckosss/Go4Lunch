@@ -40,7 +40,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    // FOR BUTTERKNIFE
+    // BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
@@ -48,15 +48,19 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 
+    // GLIDE SLIDER
+    implementation "com.github.firdausmaulan:GlideSlider:$glide_slider_version"
+
     //GLIDE TRANSFORMATIONS
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
 
-    // FOR RETROFIT
+    // RETROFIT
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
-    // FOR RXJAVA
+    // RXJAVA
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
 
@@ -72,6 +76,9 @@ dependencies {
 
     //EASY PERMISSIONS
     implementation 'pub.devrel:easypermissions:1.1.1'
+
+    // JODA TIME
+    implementation 'joda-time:joda-time:2.10'
 
     //Crashlytic
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {

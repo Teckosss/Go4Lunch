@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Go4Lunch</string>
+    <string name="popup_title_perm_access">L\'application a besoin de permissions pour fonctionner correctement.</string>
+    <string name="hungry">J\'ai faim !</string>
+    <string name="available">Collègues disponibles</string>
+    <string name="search">Rechercher</string>
+    <string name="bottom_menu_map">Carte</string>
+    <string name="bottom_menu_list">Restaurant</string>
+    <string name="bottom_menu_mates">Collègues</string>
+    <string name="drawer_open">Ouvrir le tiroir de navigation</string>
+    <string name="drawer_close">Fermer le tiroir de navigation</string>
+    <string name="drawer_lunch">VOTRE REPAS</string>
+    <string name="drawer_settings">OPTIONS</string>
+    <string name="drawer_logout">SE DECONNECTER</string>
+    <string name="info_no_email_found">Email introuvable</string>
+    <string name="info_no_username_found">Nom introuvable</string>
+    <string name="error_authentication_canceled">Authentification annulée</string>
+    <string name="error_no_internet">Pas de connexion internet !</string>
+    <string name="error_unknown_error">Une erreur inconnue est survenue</string>
+    <string name="mates_is_eating_at">%1$s mange : %2$s</string>
+    <string name="mates_hasnt_decided">%1$s n\'a pas encore décidé</string>
+    <string name="restaurant_detail_no_website">Pas de site internet</string>
+    <string name="restaurant_detail_no_phone">Pas de numéro de téléphone</string>
+    <string name="restaurant_closed">Fermé</string>
+    <string name="restaurant_opening_not_know">Horaires d\'ouvertures inconnus</string>
+    <string name="list_unit_distance">%1$sm</string>
+    <string name="restaurant_open_until">Ouvert jusqu\'à %1$s</string>
+    <string name="restaurant_closing_soon">Ferme bientôt (%1$s)</string>
+    <string name="restaurant_item_call">APPELER</string>
+    <string name="restaurant_item_like">J\'AIME</string>
+    <string name="restaurant_item_website">SITE WEB</string>
+    <string name="settings_zoom_text">Zoom sur la carte</string>
+    <string name="settings_search_radius_text">Rayon de recherche des restaurants</string>
+    <string name="settings_notification_text">Notifications</string>
+    <string name="label_settings">Options</string>
+</resources>

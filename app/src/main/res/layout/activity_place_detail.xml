@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.PlaceDetailActivity">
+
+    <com.glide.slider.library.SliderLayout
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"/>
+
+    <ImageView
+        android:id="@+id/restaurant_main_picture"
+        app:layout_constraintTop_toBottomOf="@id/slider"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintTop_toBottomOf="@+id/restaurant_main_picture">
+
+        <TextView
+            android:id="@+id/restaurant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_to_parent"
+            android:text="RESTAURANT_NAME"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/restaurant_star_1"
+            android:src="@drawable/baseline_star_rate_black_24"
+            android:tint="@color/colorStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_to_parent"
+            app:layout_constraintStart_toEndOf="@id/restaurant_name"
+            app:layout_constraintTop_toTopOf="@id/restaurant_name"
+            app:layout_constraintBottom_toBottomOf="@id/restaurant_name"
+            />
+
+        <ImageView
+            android:id="@+id/restaurant_star_2"
+            android:src="@drawable/baseline_star_rate_black_24"
+            android:tint="@color/colorStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/restaurant_star_1"
+            app:layout_constraintTop_toTopOf="@id/restaurant_name"
+            app:layout_constraintBottom_toBottomOf="@id/restaurant_name"
+            />
+
+        <ImageView
+            android:id="@+id/restaurant_star_3"
+            android:src="@drawable/baseline_star_rate_black_24"
+            android:tint="@color/colorStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/restaurant_star_2"
+            app:layout_constraintTop_toTopOf="@id/restaurant_name"
+            app:layout_constraintBottom_toBottomOf="@id/restaurant_name"
+            />
+
+        <TextView
+            android:id="@+id/restaurant_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_to_parent"
+            android:text="RESTAURANT_ADDRESS"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/restaurant_name" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/restaurant_item_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout"
+        app:menu="@menu/restaurant_detail_items"
+        app:itemIconTint="@drawable/restaurant_item_list"
+        app:itemTextColor="@drawable/restaurant_item_list"
+        >
+
+    </android.support.design.widget.BottomNavigationView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/restaurant_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/restaurant_item_list">
+
+    </android.support.v7.widget.RecyclerView>
+
+</android.support.constraint.ConstraintLayout>

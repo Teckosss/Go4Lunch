@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName;
 public class PlusCode {
     @SerializedName("compound_code")
     @Expose
-    private String compoundCode;
+    public String compoundCode;
     @SerializedName("global_code")
     @Expose
-    private String globalCode;
+    public String globalCode;
 
     public String getCompoundCode() {
         return compoundCode;

@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName;
 public class Southwest {
     @SerializedName("lat")
     @Expose
-    private Double lat;
+    public Double lat;
     @SerializedName("lng")
     @Expose
-    private Double lng;
+    public Double lng;
 
     public Double getLat() {
         return lat;

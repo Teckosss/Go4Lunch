@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsInfo;
+import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.Result;
 import com.deguffroy.adrien.go4lunch.R;
 
@@ -17,11 +19,11 @@ import java.util.List;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
     // FOR DATA
-    private List<Result> mResults;
+    private List<PlaceDetailsResults> mResults;
     private String mLocation;
 
     // CONSTRUCTOR
-    public RestaurantAdapter(List<Result> result, String location) {
+    public RestaurantAdapter(List<PlaceDetailsResults> result, String location) {
         this.mResults = result;
         this.mLocation = location;
     }
@@ -37,6 +39,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(RestaurantViewHolder viewHolder, int position) {
         viewHolder.updateWithData(this.mResults.get(position), this.mLocation);
+    }
+
+    public PlaceDetailsResults getRestaurant(int position){
+        return this.mResults.get(position);
     }
 
     @Override
