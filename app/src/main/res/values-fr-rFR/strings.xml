@@ -11,7 +11,7 @@
     <string name="drawer_open">Ouvrir le tiroir de navigation</string>
     <string name="drawer_close">Fermer le tiroir de navigation</string>
     <string name="drawer_lunch">VOTRE REPAS</string>
-    <string name="drawer_settings">OPTIONS</string>
+    <string name="drawer_settings">PARAMÈTRES</string>
     <string name="drawer_logout">SE DECONNECTER</string>
     <string name="info_no_email_found">Email introuvable</string>
     <string name="info_no_username_found">Nom introuvable</string>
@@ -33,5 +33,5 @@
     <string name="settings_zoom_text">Zoom sur la carte</string>
     <string name="settings_search_radius_text">Rayon de recherche des restaurants</string>
     <string name="settings_notification_text">Notifications</string>
-    <string name="label_settings">Options</string>
+    <string name="label_settings">Paramètres</string>
 </resources>

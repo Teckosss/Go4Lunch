@@ -36,9 +36,9 @@
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/label_settings"
-            android:parentActivityName=".Activity.MainActivity"></activity>
-
-        <activity android:name=".Activity.PlaceDetailActivity"></activity>
+            android:parentActivityName=".Activity.MainActivity" />
+        <activity android:name=".Activity.PlaceDetailActivity" />
+        <activity android:name=".Activity.BaseActivity"></activity>
     </application>
 
 </manifest>

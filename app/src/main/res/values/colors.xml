@@ -6,6 +6,7 @@
     <color name="colorError">#FF5252</color>
     <color name="colorWarning">#ff8a65</color>
     <color name="colorOk">#2e7d32</color>
+    <color name="colorGreen">#85b387</color>
     <color name="colorStar">#ffd600</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>

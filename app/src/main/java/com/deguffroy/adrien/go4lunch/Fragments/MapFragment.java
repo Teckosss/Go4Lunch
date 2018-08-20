@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,9 +18,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.deguffroy.adrien.go4lunch.Activity.PlaceDetailActivity;
 import com.deguffroy.adrien.go4lunch.BuildConfig;
 import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
+import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
@@ -38,6 +41,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.IOException;
@@ -52,7 +56,7 @@ import retrofit2.HttpException;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, OnMapReadyCallback {
+public class MapFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener {
 
     @BindView(R.id.mapView) MapView mMapView;
 
@@ -94,11 +98,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         this.configureLocationRequest();
         this.configureLocationCallBack();
         return rootView;
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        //googleMap.setOnMarkerClickListener(GoogleMap.OnMarkerClickListener);
     }
 
     @Override
@@ -193,10 +192,12 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
             Double lat = result.getResults().get(i).getGeometry().getLocation().getLat();
             Double lng = result.getResults().get(i).getGeometry().getLocation().getLng();
             String title = result.getResults().get(i).getName();
-            googleMap.addMarker(new MarkerOptions()
+            Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat,lng))
                     .title(title)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_marker)));
+
+           marker.setTag(result.getResults().get(i).getPlaceId());
         }
     }
 
@@ -277,6 +278,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                 rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
                 rlp.setMargins(0, 0, 30, 30);
                 googleMap.getUiSettings().setRotateGesturesEnabled(true);
+                googleMap.setOnMarkerClickListener(MapFragment.this::onClickMarker);
             }
         });
     }
@@ -338,5 +340,22 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {googleMap.setMyLocationEnabled(true);}
+    }
+
+    // -----------------
+    // ACTION
+    // -----------------
+
+    private boolean onClickMarker(Marker marker){
+        if (marker.getTag() != null){
+            Log.e(TAG, "onClickMarker: " + marker.getTag() );
+            Intent intent = new Intent(getActivity(),PlaceDetailActivity.class);
+            intent.putExtra("PlaceDetailResult", marker.getTag().toString());
+            startActivity(intent);
+            return true;
+        }else{
+            Log.e(TAG, "onClickMarker: ERROR NO TAG" );
+            return false;
+        }
     }
 }

@@ -31,4 +31,10 @@ public class UserHelper {
     public static Task<DocumentSnapshot> getUser(String uid){
         return UserHelper.getUsersCollection().document(uid).get();
     }
+
+    // --- UPDATE ---
+
+    public static Task<Void> updateBookedRestaurant(String restaurant, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("restaurantSelected", restaurant);
+    }
 }
