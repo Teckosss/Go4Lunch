@@ -9,11 +9,13 @@ public class Booking {
     private String bookingDate;
     private String userId;
     private String restaurantId;
+    private String restaurantName;
 
-    public Booking(String bookingDate, String userId, String restaurantId) {
+    public Booking(String bookingDate, String userId, String restaurantId, String restaurantName) {
         this.bookingDate = bookingDate;
         this.userId = userId;
         this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
     }
 
     public String getBookingDate() {
@@ -38,5 +40,13 @@ public class Booking {
 
     public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 }

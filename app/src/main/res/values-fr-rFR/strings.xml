@@ -34,4 +34,8 @@
     <string name="settings_search_radius_text">Rayon de recherche des restaurants</string>
     <string name="settings_notification_text">Notifications</string>
     <string name="label_settings">Paramètres</string>
+    <string name="http_error_message">HttpException, code d\'erreur : %1$i</string>
+    <string name="timeout_error_message">Délai d\'attente dépassé, veuillez verifier votre connexion internet</string>
+    <string name="exception_error_message">Une erreur est survenue, veuillez verifier votre connexion internet</string>
+    <string name="generic_error_message">Une erreur est survenue, veuillez réessayer</string>
 </resources>

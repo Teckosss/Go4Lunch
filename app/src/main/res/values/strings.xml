@@ -13,6 +13,12 @@
     <string name="available">Available workmates</string>
     <string name="search">Search</string>
 
+    <!-- ERROR TEXT -->
+    <string name="http_error_message">HttpException, Error code : %1$i</string>
+    <string name="timeout_error_message">Request timeout, please check your internet connection</string>
+    <string name="exception_error_message">An error occurred, please check your internet connection</string>
+    <string name="generic_error_message">An error occurred, please try again</string>
+
     <!-- BOTTOM MENU -->
     <string name="bottom_menu_map">Map view</string>
     <string name="bottom_menu_list">List view</string>
@@ -45,6 +51,7 @@
     <string name="list_unit_distance">%1$sm</string>
     <string name="restaurant_open_until">Open until %1$s</string>
     <string name="restaurant_closing_soon">Closing soon (%1$s)</string>
+    <string name="restaurant_mates_number">(%1$d)</string>
 
     <!-- RESTAURANT DETAIL  ACTIVITY-->
     <string name="restaurant_item_call">CALL</string>

@@ -3,6 +3,7 @@ package com.deguffroy.adrien.go4lunch.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -29,10 +30,13 @@ import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.glide.slider.library.Animations.DescriptionAnimation;
 import com.glide.slider.library.SliderLayout;
 import com.glide.slider.library.SliderTypes.DefaultSliderView;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -136,24 +140,6 @@ public class PlaceDetailActivity extends BaseActivity {
         };
     }
 
-    private void handleError(Throwable throwable) {
-        if (throwable instanceof HttpException) {
-            HttpException httpException = (HttpException) throwable;
-            int statusCode = httpException.code();
-            Log.e("HttpException", "Error code : " + statusCode);
-            Toast.makeText(this, "HttpException, Error code : " + statusCode, Toast.LENGTH_SHORT).show();
-        } else if (throwable instanceof SocketTimeoutException) {
-            Log.e("SocketTimeoutException", "Timeout from retrofit");
-            Toast.makeText(this, "Request timeout, please check your internet connection", Toast.LENGTH_SHORT).show();
-        } else if (throwable instanceof IOException) {
-            Log.e("IOException", "Error");
-            Toast.makeText(this, "An error occurred, please check your internet connection", Toast.LENGTH_SHORT).show();
-        } else {
-            Log.e("Generic handleError", "Error");
-            Toast.makeText(this, "An error occurred, please try again", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     // -------------------
     // UPDATE UI
     // -------------------
@@ -203,41 +189,52 @@ public class PlaceDetailActivity extends BaseActivity {
         if (this.getCurrentUser() != null){
             String userId = getCurrentUser().getUid();
             String restaurantId = requestResult.getPlaceId();
-
-            UserHelper.getUsersCollection().get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                        if (document.getData().get("restaurantSelected") != null){ // If there is a restaurant already booked
-                            String restaurantSelected = document.getData().get("restaurantSelected").toString();
-                            if (restaurantSelected.equals(requestResult.getName())){ // If booked restaurant is the same as restaurant we are trying to book
-
-                                // Check date, if different create new booking and delete the old one OR update booking with new date
-
-                            }else{
-
-                                // Create new booking and delete the old one OR update booking with new name and date. Update user
-
-                            }
-
-                        }else{ // No restaurant already booked
-
-                            this.createBookingAndUpdateUser(userId, restaurantId);
-                        }
-                    }
-                }else {
-                    Log.e("TAG", "Error getting documents: ", task.getException());
-                }
-            });
-
+            String restaurantName = requestResult.getName();
+            this.checkIfUserAlreadyBookedRestaurant(userId,restaurantId, restaurantName);
         }else{
             Log.e("TAG", "USER : DISCONNECTED" );
         }
     }
 
-    private void createBookingAndUpdateUser(String userId, String restaurantId){
-        RestaurantsHelper.createBooking(this.getTodayDate(),userId,restaurantId).addOnFailureListener(this.onFailureListener());
-        UserHelper.updateBookedRestaurant(requestResult.getName(),userId);
+    // ---------------------------------
+    // PROCESS TO BOOK A RESTAURANT
+    // ---------------------------------
+
+    private void checkIfUserAlreadyBookedRestaurant(String userId, String restaurantId, String restaurantName){
+        RestaurantsHelper.getBooking(userId, getTodayDate()).addOnCompleteListener(restaurantTask -> {
+            if (restaurantTask.isSuccessful()){
+                if (restaurantTask.getResult().size() == 1){ // User already booked a restaurant today
+
+                    for (QueryDocumentSnapshot restaurant : restaurantTask.getResult()) {
+                       if (restaurant.getData().get("restaurantName").equals(restaurantName)){ // If booked restaurant is the same as restaurant we are trying to book
+
+                           Toast.makeText(this, "You already booked this restaurant for today!", Toast.LENGTH_SHORT).show();
+
+                       }else{ // If user is trying to book an other restaurant for today
+
+                           this.manageBooking(userId, restaurantId, restaurantName,restaurant.getId(),false,true);
+                           Toast.makeText(this, "You change your booked restaurant for today!", Toast.LENGTH_SHORT).show();
+                       }
+                    }
+
+                }else{ // No restaurant booked for this user today
+
+                    this.manageBooking(userId, restaurantId, restaurantName,null,true,false);
+                    Toast.makeText(this, "You have booked a new restaurant for today!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+
+    private void manageBooking(String userId, String restaurantId,String restaurantName,@Nullable String bookingId, boolean toCreate, boolean toUpdate){
+        if(toUpdate){
+            RestaurantsHelper.deleteBooking(bookingId);
+            RestaurantsHelper.createBooking(this.getTodayDate(),userId,restaurantId, restaurantName).addOnFailureListener(this.onFailureListener());
+        }else if(toCreate){
+            RestaurantsHelper.createBooking(this.getTodayDate(),userId,restaurantId, restaurantName).addOnFailureListener(this.onFailureListener());
+        }
     }
 
     private String getTodayDate(){

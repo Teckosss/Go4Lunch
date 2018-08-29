@@ -6,6 +6,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 
@@ -23,14 +24,23 @@ public class RestaurantsHelper {
 
     // --- CREATE ---
 
-    public static Task<DocumentReference> createBooking(String bookingDate, String userId, String restaurantId){
-        Booking bookingToCreate = new Booking(bookingDate, userId, restaurantId);
+    public static Task<DocumentReference> createBooking(String bookingDate, String userId, String restaurantId, String restaurantName){
+        Booking bookingToCreate = new Booking(bookingDate, userId, restaurantId, restaurantName);
         return RestaurantsHelper.getBookingCollection().add(bookingToCreate);
     }
 
     // --- GET ---
 
-    public static Task<DocumentSnapshot> getBooking(String bookingId){
-        return RestaurantsHelper.getBookingCollection().document(bookingId).get();
+    public static Task<QuerySnapshot> getBooking(String userId, String bookingDate){
+        return RestaurantsHelper.getBookingCollection().whereEqualTo("userId", userId).whereEqualTo("bookingDate", bookingDate).get();
+    }
+
+    public static Task<QuerySnapshot> getTodayBooking(String restaurantId, String bookingDate){
+        return RestaurantsHelper.getBookingCollection().whereEqualTo("restaurantId", restaurantId).whereEqualTo("bookingDate", bookingDate).get();
+    }
+
+    // --- DELETE ---
+    public static Task<Void> deleteBooking(String bookingId){
+        return RestaurantsHelper.getBookingCollection().document(bookingId).delete();
     }
 }

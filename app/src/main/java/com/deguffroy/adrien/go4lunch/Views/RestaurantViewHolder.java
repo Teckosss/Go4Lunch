@@ -10,11 +10,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
 import com.deguffroy.adrien.go4lunch.BuildConfig;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.Location;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
 import com.deguffroy.adrien.go4lunch.R;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,7 +75,24 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         // Display Address
         this.mAddressText.setText(getAddress(results));
 
-        //this.mMatesText.setText(results.get(0).getName());
+
+        // Display Mates number & Icon
+        RestaurantsHelper.getTodayBooking(results.getPlaceId(),getTodayDate()).addOnCompleteListener(restaurantTask -> {
+            if (restaurantTask.isSuccessful()){
+                if (restaurantTask.getResult().size() > 0) {
+                    for (QueryDocumentSnapshot document : restaurantTask.getResult()) {
+                        Log.e("TAG", document.getId() + " => " + document.getData());
+                    }
+                    this.mMatesText.setText(itemView.getResources().getString(R.string.restaurant_mates_number,restaurantTask.getResult().size()));
+                    this.mMatesPicture.setImageResource(R.drawable.baseline_person_outline_black_36);
+                    this.mMatesPicture.setVisibility(View.VISIBLE);
+                }else{
+                    this.mMatesText.setText("");
+                    this.mMatesPicture.setVisibility(View.GONE);
+                }
+            }
+        });
+
 
         // Display Opening Hours
         if (results.getOpeningHours() != null){
@@ -196,5 +215,11 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String getTodayDate(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(c.getTime());
     }
 }

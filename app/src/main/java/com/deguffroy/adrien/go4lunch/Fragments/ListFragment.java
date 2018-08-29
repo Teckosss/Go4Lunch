@@ -131,16 +131,16 @@ public class ListFragment extends Fragment {
             HttpException httpException = (HttpException) throwable;
             int statusCode = httpException.code();
             Log.e("HttpException", "Error code : " + statusCode);
-            Toast.makeText(getContext(), "HttpException, Error code : " + statusCode, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.http_error_message,statusCode), Toast.LENGTH_SHORT).show();
         } else if (throwable instanceof SocketTimeoutException) {
             Log.e("SocketTimeoutException", "Timeout from retrofit");
-            Toast.makeText(getContext(), "Request timeout, please check your internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.timeout_error_message), Toast.LENGTH_SHORT).show();
         } else if (throwable instanceof IOException) {
             Log.e("IOException", "Error");
-            Toast.makeText(getContext(), "An error occurred, please check your internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.exception_error_message), Toast.LENGTH_SHORT).show();
         } else {
             Log.e("Generic handleError", "Error");
-            Toast.makeText(getContext(), "An error occurred, please try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
@@ -24,6 +25,7 @@ import com.deguffroy.adrien.go4lunch.Utils.DividerItemDecoration;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.deguffroy.adrien.go4lunch.Views.MatesAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -93,34 +95,25 @@ public class MatesFragment extends Fragment {
     private void updateUIWhenCreating(){
         this.mSwipeRefreshLayout.setRefreshing(true);
         CollectionReference collectionReference = UserHelper.getUsersCollection();
-        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                mSwipeRefreshLayout.setRefreshing(false);
-                if (task.isSuccessful()){
-                    mUsers.clear();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        //Log.e("TAG", "UID from ViewModel : " + mViewModel.getCurrentUserUID());
-                        //Log.e("TAG", "UID from Document : " + document.getData().get("uid").toString());
-                        if (!(mViewModel.getCurrentUserUID().equals(document.getData().get("uid").toString()))){
-                            String uid = document.getData().get("uid").toString();
-                            String username = document.getData().get("username").toString();
-                            String urlPicture = document.getData().get("urlPicture").toString();
-                            String restaurantSelected;
-                            if (document.getData().get("restaurantSelected") != "null"){
-                                restaurantSelected = "null";
-                            }else{
-                                restaurantSelected = document.getData().get("restaurantSelected").toString();
-                            }
-                            User userToAdd = new User(uid,username,urlPicture,restaurantSelected, MainActivity.DEFAULT_SEARCH_RADIUS,MainActivity.DEFAULT_ZOOM,false);
-                            mUsers.add(userToAdd);
-                        }
+        collectionReference.get().addOnCompleteListener(task -> {
+            mSwipeRefreshLayout.setRefreshing(false);
+            if (task.isSuccessful()){
+                mUsers.clear();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    //Log.e("TAG", "UID from ViewModel : " + mViewModel.getCurrentUserUID());
+                    //Log.e("TAG", "UID from Document : " + document.getData().get("uid").toString());
+                    if (!(mViewModel.getCurrentUserUID().equals(document.getData().get("uid").toString()))){
+                        String uid = document.getData().get("uid").toString();
+                        String username = document.getData().get("username").toString();
+                        String urlPicture = document.getData().get("urlPicture").toString();
+                        User userToAdd = new User(uid,username,urlPicture, MainActivity.DEFAULT_SEARCH_RADIUS,MainActivity.DEFAULT_ZOOM,false);
+                        mUsers.add(userToAdd);
                     }
-                }else {
-                    Log.e("TAG", "Error getting documents: ", task.getException());
                 }
-                mMatesAdapter.notifyDataSetChanged();
+            }else {
+                Log.e("TAG", "Error getting documents: ", task.getException());
             }
+            mMatesAdapter.notifyDataSetChanged();
         });
     }
 }
