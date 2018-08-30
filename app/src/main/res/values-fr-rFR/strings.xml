@@ -38,4 +38,10 @@
     <string name="timeout_error_message">Délai d\'attente dépassé, veuillez verifier votre connexion internet</string>
     <string name="exception_error_message">Une erreur est survenue, veuillez verifier votre connexion internet</string>
     <string name="generic_error_message">Une erreur est survenue, veuillez réessayer</string>
+    <string name="restaurant_new_booking">Vous avez réservé un nouveau restaurant pour aujourd\'hui !</string>
+    <string name="restaurant_change_booking">Vous avez modifié le restaurant réservé pour aujourd\'hui !</string>
+    <string name="restaurant_already_booked">Vous avez déjà réservé ce restaurant pour aujourd\'hui !</string>
+    <string name="restaurant_mates_number">(%1$d)</string>
+    <string name="label_website">Site web</string>
+    <string name="error_display_website">Impossible d\'afficher le site web, veuillez réessayer</string>
 </resources>

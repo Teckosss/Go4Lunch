@@ -65,4 +65,15 @@ public class User {
     public void setNotificationOn(@Nullable boolean notificationOn) {
         isNotificationOn = notificationOn;
     }
+
+    public String getInfo() {
+        return "User{" +
+                "uid='" + uid + '\'' +
+                ", username='" + username + '\'' +
+                ", urlPicture='" + urlPicture + '\'' +
+                ", searchRadius=" + searchRadius +
+                ", defaultZoom=" + defaultZoom +
+                ", isNotificationOn=" + isNotificationOn +
+                '}';
+    }
 }

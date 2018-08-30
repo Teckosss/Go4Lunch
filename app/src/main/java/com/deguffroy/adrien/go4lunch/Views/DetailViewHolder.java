@@ -5,13 +5,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
-import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.Result;
 import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -23,14 +21,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Adrien Deguffroy on 27/07/2018.
+ * Created by Adrien Deguffroy on 30/08/2018.
  */
-public class MatesViewHolder extends RecyclerView.ViewHolder {
+public class DetailViewHolder extends RecyclerView.ViewHolder {
+    @BindView(R.id.detail_main_picture) ImageView mImageView;
+    @BindView(R.id.detail_textview_username) TextView mTextView;
 
-    @BindView(R.id.mates_main_picture) ImageView mImageView;
-    @BindView(R.id.mates_textview_username) TextView mTextView;
-
-    public MatesViewHolder(View itemView) {
+    public DetailViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
     }
@@ -43,19 +40,8 @@ public class MatesViewHolder extends RecyclerView.ViewHolder {
             glide.load(R.drawable.ic_no_image_available).apply(RequestOptions.circleCropTransform()).into(mImageView);
         }
 
-        RestaurantsHelper.getBooking(results.getUid(), getTodayDate()).addOnCompleteListener(restaurantTask -> {
-            if (restaurantTask.isSuccessful()){
-                if (restaurantTask.getResult().size() == 1){ // User already booked a restaurant today
-                    for (QueryDocumentSnapshot restaurant : restaurantTask.getResult()) {
-                        this.mTextView.setText(itemView.getResources().getString(R.string.mates_is_eating_at, results.getUsername(), restaurant.getData().get("restaurantName")));
-                        this.changeTextColor(R.color.colorBlack);
-                    }
-                }else{ // No restaurant booked for this user today
-                    this.mTextView.setText(itemView.getResources().getString(R.string.mates_hasnt_decided, results.getUsername()));
-                    this.changeTextColor(R.color.colorGray);
-                }
-            }
-        });
+        this.mTextView.setText(itemView.getResources().getString(R.string.restaurant_detail_recyclerview, results.getUsername()));
+        this.changeTextColor(R.color.colorBlack);
     }
 
     private void changeTextColor(int color){

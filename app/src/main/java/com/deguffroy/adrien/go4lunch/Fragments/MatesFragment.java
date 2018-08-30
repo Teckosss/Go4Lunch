@@ -100,8 +100,6 @@ public class MatesFragment extends Fragment {
             if (task.isSuccessful()){
                 mUsers.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    //Log.e("TAG", "UID from ViewModel : " + mViewModel.getCurrentUserUID());
-                    //Log.e("TAG", "UID from Document : " + document.getData().get("uid").toString());
                     if (!(mViewModel.getCurrentUserUID().equals(document.getData().get("uid").toString()))){
                         String uid = document.getData().get("uid").toString();
                         String username = document.getData().get("username").toString();

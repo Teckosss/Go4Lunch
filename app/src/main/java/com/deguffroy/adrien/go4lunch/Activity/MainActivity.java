@@ -99,14 +99,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("TAG", "onActivityResult: ENTER" );
         super.onActivityResult(requestCode, resultCode, data);
         // Handle SignIn Activity response on activity result
         this.handleResponseAfterSignIn(requestCode, resultCode, data);
     }
 
     private void startSignInActivity(){
-        Log.e("TAG", "startSignInActivity: ENTER" );
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -343,8 +341,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
 
         IdpResponse response = IdpResponse.fromResultIntent(data);
-        Log.e("TAG", "RequestCode: " + requestCode );
-        Log.e("TAG", "Resultcode: " + resultCode );
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
@@ -359,9 +355,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     Toast.makeText(this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
                 }
             }
-        }else{
-            Log.e("TAG", "handleResponseAfterSignIn: " + requestCode );
-            Toast.makeText(this, "Unable to login!", Toast.LENGTH_SHORT).show();
         }
     }
 }

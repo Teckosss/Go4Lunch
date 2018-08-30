@@ -41,10 +41,6 @@
     <string name="mates_is_eating_at">%1$s is eating at %2$s</string>
     <string name="mates_hasnt_decided">%1$s hasn\'t decided yet</string>
 
-    <!-- RESTAURANT DETAIL ACTIVITY -->
-    <string name="restaurant_detail_no_website">No website available</string>
-    <string name="restaurant_detail_no_phone">No phone number available</string>
-
     <!-- RESTAURANT LIST -->
     <string name="restaurant_closed">Closed</string>
     <string name="restaurant_opening_not_know">Opening hours are not known</string>
@@ -58,11 +54,24 @@
     <string name="restaurant_item_like">LIKE</string>
     <string name="restaurant_item_website">WEBSITE</string>
 
+    <string name="restaurant_new_booking">You have booked a new restaurant for today!</string>
+    <string name="restaurant_change_booking">You have change your booked restaurant for today!</string>
+    <string name="restaurant_already_booked">You already booked this restaurant for today!</string>
+
+    <string name="restaurant_detail_no_website">No website available</string>
+    <string name="restaurant_detail_no_phone">No phone number available</string>
+
+    <string name="restaurant_detail_recyclerview">%1$s is joining!</string>
+
     <!-- SETTINGS ACTIVITY -->
     <string name="settings_zoom_text">Zoom on map</string>
     <string name="settings_search_radius_text">Restaurants\'s search radius</string>
     <string name="settings_notification_text">Notifications</string>
 
+    <!-- WEBVIEW ACTIVITY -->
+    <string name="error_display_website">Unable to display website, please try again</string>
+
     <!-- ACTIVITY LABEL -->
     <string name="label_settings">Settings</string>
+    <string name="label_website">Website</string>
 </resources>

@@ -1,23 +1,20 @@
 package com.deguffroy.adrien.go4lunch.Activity;
 
-import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
@@ -25,43 +22,29 @@ import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetail
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
 import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
+import com.deguffroy.adrien.go4lunch.Utils.DividerItemDecoration;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
-import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
+import com.deguffroy.adrien.go4lunch.Views.DetailAdapter;
+import com.deguffroy.adrien.go4lunch.Views.MatesAdapter;
 import com.glide.slider.library.Animations.DescriptionAnimation;
 import com.glide.slider.library.SliderLayout;
 import com.glide.slider.library.SliderTypes.DefaultSliderView;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Document;
-
-import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
-import retrofit2.HttpException;
 
 import static com.deguffroy.adrien.go4lunch.Views.RestaurantViewHolder.BASE_URL;
 import static com.deguffroy.adrien.go4lunch.Views.RestaurantViewHolder.MAX_HEIGHT_LARGE;
 
-public class PlaceDetailActivity extends BaseActivity {
+public class PlaceDetailActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.restaurant_name)TextView mRestaurantName;
     @BindView(R.id.restaurant_address)TextView mRestaurantAddress;
@@ -69,9 +52,15 @@ public class PlaceDetailActivity extends BaseActivity {
     @BindView(R.id.restaurant_recycler_view)RecyclerView mRestaurantRecyclerView;
     @BindView(R.id.slider)SliderLayout mDemoSlider;
     @BindView(R.id.floatingActionButton) FloatingActionButton mFloatingActionButton;
+    @BindView(R.id.restaurant_item_call) Button mButtonCall;
+    @BindView(R.id.restaurant_item_like) Button mButtonLike;
+    @BindView(R.id.restaurant_item_website) Button mButtonWebsite;
 
     private Disposable mDisposable;
     private PlaceDetailsResults requestResult;
+
+    private List<User> mDetailUsers;
+    private DetailAdapter mDetailAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +70,8 @@ public class PlaceDetailActivity extends BaseActivity {
 
         this.retrieveObject();
         this.setFloatingActionButtonOnClickListener();
+        this.configureButtonClickListener();
+        this.configureRecyclerView();
     }
 
     @Override
@@ -104,14 +95,55 @@ public class PlaceDetailActivity extends BaseActivity {
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
 
+    // Configure RecyclerView, Adapter, LayoutManager & glue it together
+    private void configureRecyclerView(){
+        this.mDetailUsers = new ArrayList<>();
+        this.mDetailAdapter = new DetailAdapter(this.mDetailUsers);
+        this.mRestaurantRecyclerView.setAdapter(this.mDetailAdapter);
+        this.mRestaurantRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
     private void retrieveObject(){
         String result = getIntent().getStringExtra("PlaceDetailResult");
-        Log.e("TAG", "retrieveObject: " + result );
+        //Log.e("TAG", "retrieveObject: " + result );
         this.executeHttpRequestWithRetrofit(result);
     }
 
     private void setFloatingActionButtonOnClickListener(){
         mFloatingActionButton.setOnClickListener(view -> bookThisRestaurant());
+    }
+
+    private void configureButtonClickListener(){
+        mButtonCall.setOnClickListener(this);
+        mButtonLike.setOnClickListener(this);
+        mButtonWebsite.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.restaurant_item_call:
+                if (requestResult.getFormattedPhoneNumber() != null){
+                    Toast.makeText(this, "Phone number : " + requestResult.getFormattedPhoneNumber(), Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, getResources().getString(R.string.restaurant_detail_no_phone), Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case R.id.restaurant_item_like:
+                Toast.makeText(this, "Click on Like", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.restaurant_item_website:
+                if (requestResult.getWebsite() != null){
+                    Intent intent = new Intent(this,WebViewActivity.class);
+                    intent.putExtra("Website", requestResult.getWebsite());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(this, getResources().getString(R.string.restaurant_detail_no_website), Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
     // -------------------
@@ -145,9 +177,34 @@ public class PlaceDetailActivity extends BaseActivity {
     // -------------------
 
     private void updateUI(PlaceDetailsInfo results){
-       this.displaySlider(results);
-        mRestaurantName.setText(results.getResult().getName());
-        mRestaurantAddress.setText(results.getResult().getVicinity());
+        if (results != null){
+            this.displaySlider(results);
+            mRestaurantName.setText(results.getResult().getName());
+            mRestaurantAddress.setText(results.getResult().getVicinity());
+            mDetailUsers.clear();
+            this.updateUIWithRecyclerView(results.getResult().getPlaceId());
+        }
+    }
+
+    private void updateUIWithRecyclerView(String placeId){
+        RestaurantsHelper.getTodayBooking(placeId, getTodayDate()).addOnCompleteListener(restaurantTask -> {
+            if (restaurantTask.isSuccessful()){
+                for (QueryDocumentSnapshot restaurant : restaurantTask.getResult()){
+                    Log.e("TAG", "DETAIL_ACTIVITY | Restaurant : " + restaurant.getData() );
+                    UserHelper.getUser(restaurant.getData().get("userId").toString()).addOnCompleteListener(userTask -> {
+                        if (userTask.isSuccessful()){
+                            Log.e("TAG", "DETAIL_ACTIVITY | User : " + userTask.getResult() );
+                            String uid = userTask.getResult().getData().get("uid").toString();
+                            String username = userTask.getResult().getData().get("username").toString();
+                            String urlPicture = userTask.getResult().getData().get("urlPicture").toString();
+                            User userToAdd = new User(uid,username,urlPicture, MainActivity.DEFAULT_SEARCH_RADIUS,MainActivity.DEFAULT_ZOOM,false);
+                            mDetailUsers.add(userToAdd);
+                        }
+                        mDetailAdapter.notifyDataSetChanged();
+                    });
+                }
+            }
+        });
     }
 
     private void displaySlider(PlaceDetailsInfo results){
