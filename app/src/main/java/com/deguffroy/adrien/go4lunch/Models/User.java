@@ -19,6 +19,10 @@ public class User {
 
     public User() { }
 
+    public User(String uid){
+        this.uid = uid;
+    }
+
     public User(String uid, String username, @Nullable String urlPicture, @Nullable int searchRadius, @Nullable int defaultZoom, @Nullable boolean isNotificationOn) {
         this.uid = uid;
         this.username = username;
@@ -64,16 +68,5 @@ public class User {
 
     public void setNotificationOn(@Nullable boolean notificationOn) {
         isNotificationOn = notificationOn;
-    }
-
-    public String getInfo() {
-        return "User{" +
-                "uid='" + uid + '\'' +
-                ", username='" + username + '\'' +
-                ", urlPicture='" + urlPicture + '\'' +
-                ", searchRadius=" + searchRadius +
-                ", defaultZoom=" + defaultZoom +
-                ", isNotificationOn=" + isNotificationOn +
-                '}';
     }
 }

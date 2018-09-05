@@ -6,7 +6,7 @@
     <string name="available">Collègues disponibles</string>
     <string name="search">Rechercher</string>
     <string name="bottom_menu_map">Carte</string>
-    <string name="bottom_menu_list">Restaurant</string>
+    <string name="bottom_menu_list">Restaurants</string>
     <string name="bottom_menu_mates">Collègues</string>
     <string name="drawer_open">Ouvrir le tiroir de navigation</string>
     <string name="drawer_close">Fermer le tiroir de navigation</string>
@@ -18,7 +18,7 @@
     <string name="error_authentication_canceled">Authentification annulée</string>
     <string name="error_no_internet">Pas de connexion internet !</string>
     <string name="error_unknown_error">Une erreur inconnue est survenue</string>
-    <string name="mates_is_eating_at">%1$s mange : %2$s</string>
+    <string name="mates_is_eating_at">%1$s a choisi : %2$s</string>
     <string name="mates_hasnt_decided">%1$s n\'a pas encore décidé</string>
     <string name="restaurant_detail_no_website">Pas de site internet</string>
     <string name="restaurant_detail_no_phone">Pas de numéro de téléphone</string>
@@ -30,7 +30,7 @@
     <string name="restaurant_item_call">APPELER</string>
     <string name="restaurant_item_like">J\'AIME</string>
     <string name="restaurant_item_website">SITE WEB</string>
-    <string name="settings_zoom_text">Zoom sur la carte</string>
+    <string name="settings_zoom_text">Zoom par défaut sur la carte</string>
     <string name="settings_search_radius_text">Rayon de recherche des restaurants</string>
     <string name="settings_notification_text">Notifications</string>
     <string name="label_settings">Paramètres</string>
@@ -44,4 +44,9 @@
     <string name="restaurant_mates_number">(%1$d)</string>
     <string name="label_website">Site web</string>
     <string name="error_display_website">Impossible d\'afficher le site web, veuillez réessayer</string>
+    <string name="chat_input_text_hint">Composer votre message</string>
+    <string name="chat_send_button">Envoyer</string>
+    <string name="label_chat_detail_activity">Conversation</string>
+    <string name="restaurant_detail_recyclerview">%1$s se joint à nous !</string>
+    <string name="no_restaurant_error_message">Aucun restaurant trouvé, essayez de modifier les paramètres de votre rayon de recherche</string>
 </resources>

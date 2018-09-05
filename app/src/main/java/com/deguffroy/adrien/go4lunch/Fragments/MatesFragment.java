@@ -3,8 +3,8 @@ package com.deguffroy.adrien.go4lunch.Fragments;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -17,21 +17,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.deguffroy.adrien.go4lunch.Activity.PlaceDetailActivity;
+import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.DividerItemDecoration;
+import com.deguffroy.adrien.go4lunch.Utils.ItemClickSupport;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.deguffroy.adrien.go4lunch.Views.MatesAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,6 +68,8 @@ public class MatesFragment extends Fragment {
             public void onChanged(@Nullable String uid) {
                 configureRecyclerView();
                 updateUIWhenCreating();
+                configureOnClickRecyclerView();
+                configureOnSwipeRefresh();
             }
         });
 
@@ -83,8 +86,55 @@ public class MatesFragment extends Fragment {
         this.mMatesAdapter = new MatesAdapter(this.mUsers);
         this.mRecyclerView.setAdapter(this.mMatesAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.divider));
+        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.divider), 100);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    private void configureOnSwipeRefresh(){
+        mSwipeRefreshLayout.setOnRefreshListener(this::updateUIWhenCreating);
+    }
+
+    // -----------------
+    // ACTION
+    // -----------------
+
+    // 1 - Configure item click on RecyclerView
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(mRecyclerView, R.layout.fragment_mates_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                        User result = mMatesAdapter.getMates(position);
+                        retrieveBookedRestaurantByUser(result);
+                    }
+                });
+    }
+
+    private void retrieveBookedRestaurantByUser(User user){
+        RestaurantsHelper.getBooking(user.getUid(),getTodayDate()).addOnCompleteListener(bookingTask -> {
+           if (bookingTask.isSuccessful()){
+               if (!(bookingTask.getResult().isEmpty())){
+                   for (QueryDocumentSnapshot booking : bookingTask.getResult()){
+                        showBookedRestaurantByUser(booking.getData().get("restaurantId").toString());
+                   }
+               }else{
+                   Toast.makeText(getContext(), getResources().getString(R.string.mates_hasnt_decided,user.getUsername()), Toast.LENGTH_SHORT).show();
+               }
+           }
+        });
+    }
+
+    private void showBookedRestaurantByUser(String placeId){
+        Intent intent = new Intent(getActivity(),PlaceDetailActivity.class);
+        intent.putExtra("PlaceDetailResult", placeId);
+        startActivity(intent);
+    }
+
+    private String getTodayDate(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(c.getTime());
     }
 
     // --------------------

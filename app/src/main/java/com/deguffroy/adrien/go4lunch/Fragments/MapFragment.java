@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Activity.PlaceDetailActivity;
+import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
 import com.deguffroy.adrien.go4lunch.BuildConfig;
 import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
@@ -46,6 +47,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
@@ -188,17 +192,44 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
 
     private void updateUI(MapPlacesInfo result){
         Log.e(TAG, "updateUI: " + result.getResults().size());
-        for (int i=0; i < result.getResults().size(); i++){
-            Double lat = result.getResults().get(i).getGeometry().getLocation().getLat();
-            Double lng = result.getResults().get(i).getGeometry().getLocation().getLng();
-            String title = result.getResults().get(i).getName();
-            Marker marker = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(lat,lng))
-                    .title(title)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_marker)));
+        this.createMarker(result);
+    }
 
-           marker.setTag(result.getResults().get(i).getPlaceId());
+    private void createMarker(MapPlacesInfo result) {
+        if (result.getResults().size() > 0){
+            for (int i = 0; i < result.getResults().size(); i++) {
+                int CurrentObject = i;
+                RestaurantsHelper.getTodayBooking(result.getResults().get(CurrentObject).getPlaceId(), getTodayDate()).addOnCompleteListener(restaurantTask -> {
+                    if (restaurantTask.isSuccessful()) {
+
+                        Double lat = result.getResults().get(CurrentObject).getGeometry().getLocation().getLat();
+                        Double lng = result.getResults().get(CurrentObject).getGeometry().getLocation().getLng();
+                        String title = result.getResults().get(CurrentObject).getName();
+
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(new LatLng(lat, lng));
+                        markerOptions.title(title);
+                        if (restaurantTask.getResult().isEmpty()) { // If there is no booking for today
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_unbook_24));
+                        } else { // If there is booking for today
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_booked_24));
+                        }
+                        Marker marker = googleMap.addMarker(markerOptions);
+                        marker.setTag(result.getResults().get(CurrentObject).getPlaceId());
+
+                    }
+                });
+            }
+        }else{
+            Toast.makeText(getContext(), getResources().getString(R.string.no_restaurant_error_message), Toast.LENGTH_SHORT).show();
         }
+        
+    }
+
+    private String getTodayDate(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(c.getTime());
     }
 
     // -------------------
@@ -231,16 +262,16 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
             HttpException httpException = (HttpException) throwable;
             int statusCode = httpException.code();
             Log.e("HttpException", "Error code : " + statusCode);
-            Toast.makeText(getContext(), "HttpException, Error code : " + statusCode, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.http_error_message,statusCode), Toast.LENGTH_SHORT).show();
         } else if (throwable instanceof SocketTimeoutException) {
             Log.e("SocketTimeoutException", "Timeout from retrofit");
-            Toast.makeText(getContext(), "Request timeout, please check your internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.timeout_error_message), Toast.LENGTH_SHORT).show();
         } else if (throwable instanceof IOException) {
             Log.e("IOException", "Error");
-            Toast.makeText(getContext(), "An error occurred, please check your internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.exception_error_message), Toast.LENGTH_SHORT).show();
         } else {
             Log.e("Generic handleError", "Error");
-            Toast.makeText(getContext(), "An error occurred, please try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
         }
     }
 

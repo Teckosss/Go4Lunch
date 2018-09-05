@@ -44,6 +44,10 @@
             android:parentActivityName=".Activity.PlaceDetailActivity" />
         <activity android:name=".Activity.PlaceDetailActivity" />
         <activity android:name=".Activity.BaseActivity" />
+        <activity
+            android:name=".Activity.ChatActivity"
+            android:label="@string/chat"
+            android:parentActivityName=".Activity.MainActivity" />
     </application>
 
 </manifest>

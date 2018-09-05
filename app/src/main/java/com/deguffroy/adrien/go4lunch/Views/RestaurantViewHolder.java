@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -32,9 +33,6 @@ import butterknife.ButterKnife;
  */
 public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.item_imageview_1star) ImageView m1StarPicture;
-    @BindView(R.id.item_imageview_2star) ImageView m2StarPicture;
-    @BindView(R.id.item_imageview_3star) ImageView m3StarPicture;
     @BindView(R.id.item_imageview_main_pic) ImageView mMainPicture;
     @BindView(R.id.item_imageview_mates) ImageView mMatesPicture;
     @BindView(R.id.item_textview_name) TextView mNameText;
@@ -42,6 +40,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_textview_distance) TextView mDistanceText;
     @BindView(R.id.item_textview_mates) TextView mMatesText;
     @BindView(R.id.item_textview_opening) TextView mOpeningText;
+    @BindView(R.id.item_ratingBar) RatingBar mRatingBar;
 
     private static final String OPEN = "OPEN";
     private static final String CLOSED = "CLOSED";
@@ -52,6 +51,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     public static final int MAX_WIDTH = 75;
     public static final int MAX_HEIGHT = 75;
     public static final int MAX_HEIGHT_LARGE = 250;
+
+    public static final double MAX_RATING = 5;
+    public static final double MAX_STAR = 3;
 
 
     private float[] distanceResults = new float[3];
@@ -75,6 +77,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         // Display Address
         this.mAddressText.setText(getAddress(results));
 
+        // Display Rating
+        displayRating(results);
 
         // Display Mates number & Icon
         RestaurantsHelper.getTodayBooking(results.getPlaceId(),getTodayDate()).addOnCompleteListener(restaurantTask -> {
@@ -114,6 +118,17 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             }
         }else{
             glide.load(R.drawable.ic_no_image_available).apply(RequestOptions.centerCropTransform()).into(mMainPicture);
+        }
+    }
+
+    private void displayRating(PlaceDetailsResults results){
+        if (results.getRating() != null){
+            double googleRating = results.getRating();
+            double rating = googleRating / MAX_RATING * MAX_STAR;
+            this.mRatingBar.setRating((float)rating);
+            this.mRatingBar.setVisibility(View.VISIBLE);
+        }else{
+            this.mRatingBar.setVisibility(View.GONE);
         }
     }
 

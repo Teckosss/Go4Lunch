@@ -13,10 +13,11 @@ import android.view.View;
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private Drawable mDivider;
-    private final int DIVIDER_LEFT_SIZE = 100;
+    private int DIVIDER_LEFT_SIZE;
 
-    public DividerItemDecoration(Drawable divider) {
+    public DividerItemDecoration(Drawable divider, int dividerSize) {
         mDivider = divider;
+        DIVIDER_LEFT_SIZE = dividerSize;
     }
 
     @Override

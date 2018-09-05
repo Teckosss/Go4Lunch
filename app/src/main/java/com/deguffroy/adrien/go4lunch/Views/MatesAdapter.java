@@ -38,6 +38,10 @@ public class MatesAdapter extends RecyclerView.Adapter<MatesViewHolder>{
         viewHolder.updateWithData(this.mResults.get(position));
     }
 
+    public User getMates(int position){
+        return this.mResults.get(position);
+    }
+
     @Override
     public int getItemCount() {
         int itemCount = 0;

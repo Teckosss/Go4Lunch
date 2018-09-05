@@ -3,7 +3,6 @@ package com.deguffroy.adrien.go4lunch.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -25,21 +23,24 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Fragments.ListFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MatesFragment;
 import com.deguffroy.adrien.go4lunch.R;
+import com.deguffroy.adrien.go4lunch.Utils.BottomNavigationViewHelper;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     public static final int TITLE_HUNGRY = R.string.hungry;
     public static final int  TITLE_WORKMATES = R.string.available;
+    public static final int  TITLE_CHAT = R.string.chat;
 
     //Identity each fragment with a number
     public static final int  FRAGMENT_MAPVIEW = 0;
@@ -66,6 +68,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     //Identity each activity with a number
     public static final int ACTIVITY_SETTINGS = 0;
+    public static final int ACTIVITY_CHAT = 1 ;
+    public static final int ACTIVITY_PLACE_DETAIL = 2 ;
 
     //Default data to create user
     public static final int DEFAULT_ZOOM = 13;
@@ -154,13 +158,36 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void showActivity(int activityIdentifier){
         switch (activityIdentifier){
             case ACTIVITY_SETTINGS:
-                launchActivity(SettingsActivity.class);
+                launchActivity(SettingsActivity.class,null);
+                break;
+            case ACTIVITY_CHAT:
+                launchActivity(ChatActivity.class,null);
+                break;
+            case ACTIVITY_PLACE_DETAIL:
+
+                RestaurantsHelper.getBooking(getCurrentUser().getUid(),getTodayDate()).addOnCompleteListener(bookingTask -> {
+                   if (bookingTask.isSuccessful()){
+                       Map<String,Object> extra = new HashMap<>();
+                       for (QueryDocumentSnapshot booking : bookingTask.getResult()){
+                           extra.put("PlaceDetailResult",booking.getData().get("restaurantId"));
+                       }
+                       launchActivity(PlaceDetailActivity.class,extra);
+                   }
+                });
+
                 break;
         }
     }
 
-    private void launchActivity(Class mClass){
+    private void launchActivity(Class mClass, Map<String,Object> info){
         Intent intent = new Intent(this, mClass);
+        if (info != null){
+            for (Object key : info.keySet()) {
+                String mKey = (String)key;
+                String value = (String) info.get(key);
+                intent.putExtra(mKey, value);
+            }
+        }
         startActivity(intent);
     }
 
@@ -176,6 +203,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         switch (id){
             case R.id.drawer_lunch :
+                showActivity(ACTIVITY_PLACE_DETAIL);
                 break;
             case R.id.drawer_settings:
                showActivity(ACTIVITY_SETTINGS);
@@ -232,6 +260,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void configureBottomView(){
+        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
         mBottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -250,6 +279,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             case R.id.mates:
                                 getSupportActionBar().setTitle(TITLE_WORKMATES);
                                 showFragment(FRAGMENT_MATES);
+                                break;
+                            case R.id.chat:
+                                //getSupportActionBar().setTitle(TITLE_CHAT);
+                                showActivity(ACTIVITY_CHAT);
                                 break;
                         }
                         return true;
@@ -319,12 +352,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void createUserInFirestore(){
 
         if (this.getCurrentUser() != null){
-
+            Log.e("TAG", "createUserInFirestore: LOGGED" );
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
             this.mViewModel.updateCurrentUserUID(uid);
             UserHelper.createUser(uid, username, urlPicture, DEFAULT_SEARCH_RADIUS, DEFAULT_ZOOM, DEFAULT_NOTIFICATION).addOnFailureListener(this.onFailureListener());
+        }else{
+            Log.e("TAG", "createUserInFirestore: NOT LOGGED" );
         }
     }
 

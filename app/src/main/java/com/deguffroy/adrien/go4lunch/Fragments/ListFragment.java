@@ -94,7 +94,7 @@ public class ListFragment extends Fragment {
         this.adapter = new RestaurantAdapter(this.mResults, mCommunicationViewModel.getCurrentUserPositionFormatted());
         this.mRecyclerView.setAdapter(this.adapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.divider));
+        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(ContextCompat.getDrawable(getContext(), R.drawable.divider), 100);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
     }
 
@@ -154,7 +154,12 @@ public class ListFragment extends Fragment {
 
     private void updateUI(List<PlaceDetailsResults> results){
         mResults.clear();
-        mResults.addAll(results);
-        adapter.notifyDataSetChanged();
+        if (results.size() > 0){
+            mResults.addAll(results);
+            adapter.notifyDataSetChanged();
+        }else{
+            Toast.makeText(getContext(), getResources().getString(R.string.no_restaurant_error_message), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

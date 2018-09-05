@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,18 +44,20 @@ import io.reactivex.observers.DisposableObserver;
 
 import static com.deguffroy.adrien.go4lunch.Views.RestaurantViewHolder.BASE_URL;
 import static com.deguffroy.adrien.go4lunch.Views.RestaurantViewHolder.MAX_HEIGHT_LARGE;
+import static com.deguffroy.adrien.go4lunch.Views.RestaurantViewHolder.MAX_RATING;
+import static com.deguffroy.adrien.go4lunch.Views.RestaurantViewHolder.MAX_STAR;
 
 public class PlaceDetailActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.restaurant_name)TextView mRestaurantName;
     @BindView(R.id.restaurant_address)TextView mRestaurantAddress;
-    @BindView(R.id.restaurant_star_1)ImageView mRestaurantStar1;
     @BindView(R.id.restaurant_recycler_view)RecyclerView mRestaurantRecyclerView;
     @BindView(R.id.slider)SliderLayout mDemoSlider;
     @BindView(R.id.floatingActionButton) FloatingActionButton mFloatingActionButton;
     @BindView(R.id.restaurant_item_call) Button mButtonCall;
     @BindView(R.id.restaurant_item_like) Button mButtonLike;
     @BindView(R.id.restaurant_item_website) Button mButtonWebsite;
+    @BindView(R.id.item_ratingBar) RatingBar mRatingBar;
 
     private Disposable mDisposable;
     private PlaceDetailsResults requestResult;
@@ -105,7 +108,6 @@ public class PlaceDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void retrieveObject(){
         String result = getIntent().getStringExtra("PlaceDetailResult");
-        //Log.e("TAG", "retrieveObject: " + result );
         this.executeHttpRequestWithRetrofit(result);
     }
 
@@ -181,6 +183,7 @@ public class PlaceDetailActivity extends BaseActivity implements View.OnClickLis
             this.displaySlider(results);
             mRestaurantName.setText(results.getResult().getName());
             mRestaurantAddress.setText(results.getResult().getVicinity());
+            this.displayRating(results);
             mDetailUsers.clear();
             this.updateUIWithRecyclerView(results.getResult().getPlaceId());
         }
@@ -294,9 +297,14 @@ public class PlaceDetailActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    private String getTodayDate(){
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        return df.format(c.getTime());
+    private void displayRating(PlaceDetailsInfo results){
+        if (results.getResult().getRating() != null){
+            double googleRating = results.getResult().getRating();
+            double rating = googleRating / MAX_RATING * MAX_STAR;
+            this.mRatingBar.setRating((float)rating);
+            this.mRatingBar.setVisibility(View.VISIBLE);
+        }else{
+            this.mRatingBar.setVisibility(View.GONE);
+        }
     }
 }

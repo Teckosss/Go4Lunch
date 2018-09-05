@@ -40,43 +40,21 @@
             android:maxWidth="200dp"
             android:ellipsize="end"
             android:layout_margin="@dimen/margin_to_parent"
-            android:text="RESTAURANT_NAME"
             android:textColor="@color/colorWhite"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/restaurant_star_1"
-            android:src="@drawable/baseline_star_rate_black_24"
-            android:tint="@color/colorStar"
+        <RatingBar
+            android:id="@+id/item_ratingBar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:theme="@style/RatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_to_parent"
+            android:layout_margin="@dimen/margin_to_parent"
+            android:layout_marginEnd="@dimen/margin_to_parent"
+            android:numStars="3"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/restaurant_name"
-            app:layout_constraintTop_toTopOf="@id/restaurant_name"
-            app:layout_constraintBottom_toBottomOf="@id/restaurant_name"
-            />
-
-        <ImageView
-            android:id="@+id/restaurant_star_2"
-            android:src="@drawable/baseline_star_rate_black_24"
-            android:tint="@color/colorStar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/restaurant_star_1"
-            app:layout_constraintTop_toTopOf="@id/restaurant_name"
-            app:layout_constraintBottom_toBottomOf="@id/restaurant_name"
-            />
-
-        <ImageView
-            android:id="@+id/restaurant_star_3"
-            android:src="@drawable/baseline_star_rate_black_24"
-            android:tint="@color/colorStar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/restaurant_star_2"
-            app:layout_constraintTop_toTopOf="@id/restaurant_name"
-            app:layout_constraintBottom_toBottomOf="@id/restaurant_name"
             />
 
         <TextView
@@ -84,7 +62,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_to_parent"
-            android:text="RESTAURANT_ADDRESS"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -5,6 +5,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 
 /**
  * Created by Adrien Deguffroy on 12/07/2018.
@@ -32,9 +34,7 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
+
     // --- UPDATE ---
 
-    public static Task<Void> updateBookedRestaurant(String restaurant, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantSelected", restaurant);
-    }
 }
