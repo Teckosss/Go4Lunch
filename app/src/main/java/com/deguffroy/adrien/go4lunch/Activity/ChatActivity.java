@@ -1,5 +1,6 @@
 package com.deguffroy.adrien.go4lunch.Activity;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Views.ChatAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
@@ -57,6 +60,8 @@ public class ChatActivity extends BaseActivity implements ChatAdapter.Listener {
 
     @OnClick(R.id.activity_chat_send_button)
     public void onClickSendMessage() {
+        Log.e("TAG", "onClickSendMessage: " + editTextMessage.getText() );
+        Log.e("TAG", "onClickSendMessage: " + modelCurrentUser );
         if (!TextUtils.isEmpty(editTextMessage.getText()) && modelCurrentUser != null){
             MessageHelper.createMessageForChat(editTextMessage.getText().toString(), modelCurrentUser).addOnFailureListener(this.onFailureListener());
             this.editTextMessage.setText("");

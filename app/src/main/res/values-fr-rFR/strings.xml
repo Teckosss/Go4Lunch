@@ -49,4 +49,6 @@
     <string name="label_chat_detail_activity">Conversation</string>
     <string name="restaurant_detail_recyclerview">%1$s se joint à nous !</string>
     <string name="no_restaurant_error_message">Aucun restaurant trouvé, essayez de modifier les paramètres de votre rayon de recherche</string>
+    <string name="drawer_no_restaurant_booked">Vous n\'avez pas réservé de restaurant pour aujourd\'hui !</string>
+    <string name="toolbar_search_hint">Entrez un nom de restaurant</string>
 </resources>

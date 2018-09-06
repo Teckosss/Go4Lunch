@@ -2,8 +2,10 @@ package com.deguffroy.adrien.go4lunch.Fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,11 +13,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Activity.PlaceDetailActivity;
@@ -57,10 +64,12 @@ import io.reactivex.observers.DisposableObserver;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.HttpException;
 
+import static com.deguffroy.adrien.go4lunch.Activity.MainActivity.TITLE_HUNGRY;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener {
+public class MapFragment extends BaseFragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener {
 
     @BindView(R.id.mapView) MapView mMapView;
 
@@ -76,6 +85,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
     private Disposable disposable;
+
+    private MapPlacesInfo restaurantInfo;
 
     private CommunicationViewModel mViewModel;
 
@@ -101,7 +112,42 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         this.configureGoogleApiClient();
         this.configureLocationRequest();
         this.configureLocationCallBack();
+        setHasOptionsMenu(true);
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+        MenuItem item = menu.findItem(R.id.menu_search);
+        SearchView searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        item.setActionView(searchView);
+        searchView.setQueryHint(getResources().getString(R.string.toolbar_search_hint));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(((MainActivity) getContext()).getComponentName()));
+
+        searchView.setIconifiedByDefault(false);// Do not iconify the widget; expand it by default
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getContext(),"searchvalue  :"+query,Toast.LENGTH_LONG).show();
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                for (int i = 0; i <  restaurantInfo.getResults().size(); i++){
+                    if (newText.equals(restaurantInfo.getResults().get(i).getName())){
+                        Toast.makeText(getContext(),"searchvalue  : Restaurant found! | "+newText,Toast.LENGTH_LONG).show();
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -192,10 +238,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
 
     private void updateUI(MapPlacesInfo result){
         Log.e(TAG, "updateUI: " + result.getResults().size());
-        this.createMarker(result);
-    }
-
-    private void createMarker(MapPlacesInfo result) {
         if (result.getResults().size() > 0){
             for (int i = 0; i < result.getResults().size(); i++) {
                 int CurrentObject = i;
@@ -216,20 +258,12 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                         }
                         Marker marker = googleMap.addMarker(markerOptions);
                         marker.setTag(result.getResults().get(CurrentObject).getPlaceId());
-
                     }
                 });
             }
         }else{
             Toast.makeText(getContext(), getResources().getString(R.string.no_restaurant_error_message), Toast.LENGTH_SHORT).show();
         }
-        
-    }
-
-    private String getTodayDate(){
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        return df.format(c.getTime());
     }
 
     // -------------------
@@ -248,6 +282,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
             public void onNext(T t) {
                 if (t instanceof MapPlacesInfo) {
                     updateUI(((MapPlacesInfo) t));
+                    restaurantInfo = (MapPlacesInfo)t;
                 }
             }
             @Override
@@ -255,24 +290,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
             @Override
             public void onComplete() {}
         };
-    }
-
-    private void handleError(Throwable throwable) {
-        if (throwable instanceof HttpException) {
-            HttpException httpException = (HttpException) throwable;
-            int statusCode = httpException.code();
-            Log.e("HttpException", "Error code : " + statusCode);
-            Toast.makeText(getContext(), getResources().getString(R.string.http_error_message,statusCode), Toast.LENGTH_SHORT).show();
-        } else if (throwable instanceof SocketTimeoutException) {
-            Log.e("SocketTimeoutException", "Timeout from retrofit");
-            Toast.makeText(getContext(), getResources().getString(R.string.timeout_error_message), Toast.LENGTH_SHORT).show();
-        } else if (throwable instanceof IOException) {
-            Log.e("IOException", "Error");
-            Toast.makeText(getContext(), getResources().getString(R.string.exception_error_message), Toast.LENGTH_SHORT).show();
-        } else {
-            Log.e("Generic handleError", "Error");
-            Toast.makeText(getContext(), getResources().getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void disposeWhenDestroy(){

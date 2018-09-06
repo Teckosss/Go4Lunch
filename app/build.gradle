@@ -65,7 +65,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
 
     //FIREBASE
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
 
     //FirebaseUI
     implementation 'com.firebaseui:firebase-ui-auth:4.1.0'       // Authentication

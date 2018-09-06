@@ -52,11 +52,12 @@
         android:id="@+id/item_textview_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="200dp"
+        android:ellipsize="end"
         android:layout_marginStart="@dimen/margin_to_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/item_imageview_main_pic"
         app:layout_constraintBottom_toBottomOf="@id/item_imageview_main_pic"
-        android:ellipsize="end"
         android:text="ADDRESS"
         />
 

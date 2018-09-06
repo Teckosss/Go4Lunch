@@ -22,6 +22,10 @@
 
     <string name="no_restaurant_error_message">No restaurants found, try to change your search radius settings</string>
 
+    <!-- TOOLBAR -->
+    <string name="toolbar_search_title">Search restaurants</string>
+    <string name="toolbar_search_hint">Enter a restaurant name</string>
+
     <!-- BOTTOM MENU -->
     <string name="bottom_menu_map">Map view</string>
     <string name="bottom_menu_list">List view</string>
@@ -41,6 +45,8 @@
     <string name="error_no_internet">No internet connection!</string>
     <string name="error_unknown_error">An unknown error has occurred</string>
 
+    <string name="drawer_no_restaurant_booked">You don\'t booked any restaurant for today!</string>
+
     <!-- WORKMATES LIST -->
     <string name="mates_is_eating_at">%1$s is eating at %2$s</string>
     <string name="mates_hasnt_decided">%1$s hasn\'t decided yet</string>
@@ -53,7 +59,7 @@
     <string name="restaurant_closing_soon">Closing soon (%1$s)</string>
     <string name="restaurant_mates_number">(%1$d)</string>
 
-    <!-- RESTAURANT DETAIL  ACTIVITY-->
+    <!-- RESTAURANT DETAIL ACTIVITY-->
     <string name="restaurant_item_call">CALL</string>
     <string name="restaurant_item_like">LIKE</string>
     <string name="restaurant_item_website">WEBSITE</string>
@@ -83,5 +89,8 @@
     <string name="label_settings">Settings</string>
     <string name="label_website">Website</string>
     <string name="label_chat_detail_activity">Conversation</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

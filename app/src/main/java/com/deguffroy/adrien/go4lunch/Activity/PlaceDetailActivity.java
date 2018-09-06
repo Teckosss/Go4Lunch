@@ -190,6 +190,7 @@ public class PlaceDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void updateUIWithRecyclerView(String placeId){
+        mDetailUsers.clear();
         RestaurantsHelper.getTodayBooking(placeId, getTodayDate()).addOnCompleteListener(restaurantTask -> {
             if (restaurantTask.isSuccessful()){
                 for (QueryDocumentSnapshot restaurant : restaurantTask.getResult()){
@@ -295,6 +296,7 @@ public class PlaceDetailActivity extends BaseActivity implements View.OnClickLis
         }else if(toCreate){
             RestaurantsHelper.createBooking(this.getTodayDate(),userId,restaurantId, restaurantName).addOnFailureListener(this.onFailureListener());
         }
+        updateUIWithRecyclerView(requestResult.getPlaceId());
     }
 
     private void displayRating(PlaceDetailsInfo results){
