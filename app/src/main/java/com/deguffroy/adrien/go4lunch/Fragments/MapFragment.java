@@ -27,9 +27,12 @@ import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Activity.PlaceDetailActivity;
 import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
+import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.BuildConfig;
 import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
+import com.deguffroy.adrien.go4lunch.Models.AutoComplete.AutoCompleteResult;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
+import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
@@ -42,6 +45,12 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -49,13 +58,23 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.maps.android.SphericalUtil;
+
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +96,8 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
     private static final String TAG = MapFragment.class.getSimpleName();
     private static final String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     public static final String API_KEY = BuildConfig.google_maps_api_key;
-    public static final String  SEARCH_TYPE = "restaurant";
+    public static final String SEARCH_TYPE = "restaurant";
+    public static final int RADIUS = 1500;
 
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -86,7 +106,8 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
     private LocationCallback mLocationCallback;
     private Disposable disposable;
 
-    private MapPlacesInfo restaurantInfo;
+    private List<PlaceDetailsInfo> mInfoList = new ArrayList<>();
+    private int predictionsCount;
 
     private CommunicationViewModel mViewModel;
 
@@ -103,7 +124,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
         mViewModel.currentUserPosition.observe(this, new Observer<LatLng>() {
             @Override
             public void onChanged(@Nullable LatLng latLng) {
-               executeHttpRequestWithRetrofit();
+                executeHttpRequestWithRetrofit();
             }
         });
         mMapView.onCreate(savedInstanceState);
@@ -135,15 +156,40 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getContext(),"searchvalue  :"+query,Toast.LENGTH_LONG).show();
+                if (query.length() > 2 ){
+                    disposable = PlacesStreams.streamFetchAutoCompleteInfo(query,mViewModel.getCurrentUserPositionFormatted(),RADIUS,API_KEY).subscribeWith(createObserver());
+                }else{
+                    Toast.makeText(getContext(), getResources().getString(R.string.search_too_short), Toast.LENGTH_LONG).show();
+                }
+
+                /*mGeoDataClient = Places.getGeoDataClient(getContext());
+                Task<AutocompletePredictionBufferResponse> results =
+                        mGeoDataClient.getAutocompletePredictions(query, mBounds, null);
+
+                results.addOnSuccessListener(autocompletePredictions -> {
+                    Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
+                    predictionsCount = autocompletePredictions.getCount();
+                    if (iterator.hasNext()) {
+                        while (iterator.hasNext()) {
+                            AutocompletePrediction prediction = iterator.next();
+                            disposable = PlacesStreams.streamSimpleFetchPlaceInfo(prediction.getPlaceId(),API_KEY).subscribeWith(createObserver());
+                            Log.e(TAG, "onSuccess: " + prediction.getPrimaryText(null) );
+                        }
+                    }else {
+                        Log.e(TAG, "onSuccess: NOTHING" );
+                        //Nothing matches...
+                    }
+                    autocompletePredictions.release();
+                })
+                        .addOnFailureListener(e -> Log.e(TAG, "onFailure: " + e.getLocalizedMessage() ));
+                        */
                 return true;
+
             }
             @Override
-            public boolean onQueryTextChange(String newText) {
-                for (int i = 0; i <  restaurantInfo.getResults().size(); i++){
-                    if (newText.equals(restaurantInfo.getResults().get(i).getName())){
-                        Toast.makeText(getContext(),"searchvalue  : Restaurant found! | "+newText,Toast.LENGTH_LONG).show();
-                    }
+            public boolean onQueryTextChange(String query) {
+                if (query.length() > 2){
+                    disposable = PlacesStreams.streamFetchAutoCompleteInfo(query,mViewModel.getCurrentUserPositionFormatted(),RADIUS,API_KEY).subscribeWith(createObserver());
                 }
                 return false;
             }
@@ -215,7 +261,9 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
         Log.e(TAG, "handleNewLocation: " );
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
+
         this.mViewModel.updateCurrentUserPosition(new LatLng(currentLatitude, currentLongitude));
+
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(this.mViewModel.getCurrentUserPosition()));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.mViewModel.getCurrentUserPosition(), MainActivity.DEFAULT_ZOOM));
         stopLocationUpdates();
@@ -236,35 +284,66 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
     // UPDATE UI
     // -------------------
 
-    private void updateUI(MapPlacesInfo result){
-        Log.e(TAG, "updateUI: " + result.getResults().size());
-        if (result.getResults().size() > 0){
-            for (int i = 0; i < result.getResults().size(); i++) {
-                int CurrentObject = i;
-                RestaurantsHelper.getTodayBooking(result.getResults().get(CurrentObject).getPlaceId(), getTodayDate()).addOnCompleteListener(restaurantTask -> {
-                    if (restaurantTask.isSuccessful()) {
+    private <T> void updateUI( T results){
+        googleMap.clear();
+        if(results instanceof MapPlacesInfo){
+            MapPlacesInfo result = ((MapPlacesInfo) results);
+            Log.e(TAG, "updateUI: " + result .getResults().size());
+            if (result.getResults().size() > 0){
+                for (int i = 0; i < result.getResults().size(); i++) {
+                    int CurrentObject = i;
+                    RestaurantsHelper.getTodayBooking(result.getResults().get(CurrentObject).getPlaceId(), getTodayDate()).addOnCompleteListener(restaurantTask -> {
+                        if (restaurantTask.isSuccessful()) {
+                            Double lat = result.getResults().get(CurrentObject).getGeometry().getLocation().getLat();
+                            Double lng = result.getResults().get(CurrentObject).getGeometry().getLocation().getLng();
+                            String title = result.getResults().get(CurrentObject).getName();
 
-                        Double lat = result.getResults().get(CurrentObject).getGeometry().getLocation().getLat();
-                        Double lng = result.getResults().get(CurrentObject).getGeometry().getLocation().getLng();
-                        String title = result.getResults().get(CurrentObject).getName();
-
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(new LatLng(lat, lng));
-                        markerOptions.title(title);
-                        if (restaurantTask.getResult().isEmpty()) { // If there is no booking for today
-                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_unbook_24));
-                        } else { // If there is booking for today
-                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_booked_24));
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(new LatLng(lat, lng));
+                            markerOptions.title(title);
+                            if (restaurantTask.getResult().isEmpty()) { // If there is no booking for today
+                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_unbook_24));
+                            } else { // If there is booking for today
+                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_booked_24));
+                            }
+                            Marker marker = googleMap.addMarker(markerOptions);
+                            marker.setTag(result.getResults().get(CurrentObject).getPlaceId());
                         }
-                        Marker marker = googleMap.addMarker(markerOptions);
-                        marker.setTag(result.getResults().get(CurrentObject).getPlaceId());
-                    }
-                });
+                    });
+                }
+            }else{
+                Toast.makeText(getContext(), getResources().getString(R.string.no_restaurant_error_message), Toast.LENGTH_SHORT).show();
             }
-        }else{
-            Toast.makeText(getContext(), getResources().getString(R.string.no_restaurant_error_message), Toast.LENGTH_SHORT).show();
+        }else if(results instanceof ArrayList){
+            Log.e(TAG, "updateUI: SEARCH_NUMBER : " + ((ArrayList)results).size() );
+            if (((ArrayList)results).size() > 0){
+                for(Object result : ((ArrayList)results)){
+                    PlaceDetailsResults detail = ((PlaceDetailsResults) result);
+                    RestaurantsHelper.getTodayBooking(detail.getPlaceId(), getTodayDate()).addOnCompleteListener(restaurantTask -> {
+                        if (restaurantTask.isSuccessful()) {
+                            Double lat = detail.getGeometry().getLocation().getLat();
+                            Double lng = detail.getGeometry().getLocation().getLng();
+                            String title = detail.getName();
+
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(new LatLng(lat, lng));
+                            markerOptions.title(title);
+                            if (restaurantTask.getResult().isEmpty()) { // If there is no booking for today
+                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_unbook_24));
+                            } else { // If there is booking for today
+                                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_place_booked_24));
+                            }
+                            Marker marker = googleMap.addMarker(markerOptions);
+                            marker.setTag(detail.getPlaceId());
+                        }
+                    });
+                }
+            }else{
+                Toast.makeText(getContext(), getResources().getString(R.string.search_no_result), Toast.LENGTH_LONG).show();
+            }
         }
     }
+
 
     // -------------------
     // HTTP (RxJAVA)
@@ -272,7 +351,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
 
     private void executeHttpRequestWithRetrofit(){
         String location = mViewModel.getCurrentUserPositionFormatted();
-        Log.e(TAG, "Location: "+location );
+        Log.e(TAG, "Location : "+location );
         this.disposable = PlacesStreams.streamFetchNearbyPlaces(location,MainActivity.DEFAULT_SEARCH_RADIUS,SEARCH_TYPE,API_KEY).subscribeWith(createObserver());
     }
 
@@ -280,15 +359,12 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
         return new DisposableObserver<T>() {
             @Override
             public void onNext(T t) {
-                if (t instanceof MapPlacesInfo) {
-                    updateUI(((MapPlacesInfo) t));
-                    restaurantInfo = (MapPlacesInfo)t;
-                }
+                updateUI(t);
             }
             @Override
             public void onError(Throwable e) {handleError(e);}
             @Override
-            public void onComplete() {}
+            public void onComplete() { }
         };
     }
 

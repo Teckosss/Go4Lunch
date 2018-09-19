@@ -63,6 +63,7 @@
         />
 
     <Switch
+        android:id="@+id/settings_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_to_parent"
@@ -70,5 +71,18 @@
         app:layout_constraintTop_toTopOf="@id/settings_notifications_text"
         app:layout_constraintBottom_toBottomOf="@id/settings_notifications_text"
         />
+
+    <Button
+        android:id="@+id/settings_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/settings_save_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

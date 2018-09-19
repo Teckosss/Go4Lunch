@@ -18,7 +18,7 @@
         android:ellipsize="end"
         android:layout_marginStart="@dimen/margin_to_parent"
         android:layout_marginTop="@dimen/margin_to_parent"
-        android:text="NAME_RESTAURANT"
+        android:text="NAME_RESTAURANTdddddddddddddddddddddddddddddddddddddd"
         android:textColor="@color/colorBlack"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,24 +42,25 @@
         android:id="@+id/item_imageview_main_pic"
         android:layout_width="@dimen/main_picture_size"
         android:layout_height="@dimen/main_picture_size"
-        android:layout_marginTop="@dimen/margin_to_parent"
         android:layout_marginEnd="@dimen/margin_to_parent"
+        android:layout_marginTop="@dimen/margin_to_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/item_textview_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="200dp"
-        android:ellipsize="end"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="@dimen/margin_to_parent"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxWidth="200dp"
+        android:text="ADDRESSdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        app:layout_constraintBottom_toTopOf="@+id/item_textview_opening"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/item_imageview_main_pic"
-        app:layout_constraintBottom_toBottomOf="@id/item_imageview_main_pic"
-        android:text="ADDRESS"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/item_textview_name" />
 
     <ImageView
         android:id="@+id/item_imageview_mates"

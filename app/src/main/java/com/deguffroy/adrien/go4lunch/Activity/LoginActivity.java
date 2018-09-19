@@ -1,7 +1,9 @@
 package com.deguffroy.adrien.go4lunch.Activity;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,9 +38,9 @@ public class LoginActivity extends BaseActivity {
 
         if (!this.isCurrentUserLogged()){
             this.startSignInActivity();
-        }else{
+        }else {
             this.mViewModel.updateCurrentUserUID(getCurrentUser().getUid());
-            this.launchMainActivity();
+            launchMainActivity();
         }
     }
 

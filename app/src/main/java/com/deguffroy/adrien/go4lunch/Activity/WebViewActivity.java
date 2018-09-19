@@ -21,8 +21,6 @@ public class WebViewActivity extends AppCompatActivity {
     @BindView(R.id.webview_swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.webview) WebView mWebView;
 
-    private static String URL;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +39,7 @@ public class WebViewActivity extends AppCompatActivity {
     private void configureToolbar(){
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+
     }
 
     private void configureSwipeRefreshLayout(){

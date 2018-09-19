@@ -236,6 +236,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
         return true;
     }
 
@@ -283,7 +284,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void retrieveCurrentUser(){
         mViewModel = ViewModelProviders.of(this).get(CommunicationViewModel.class);
         this.mViewModel.updateCurrentUserUID(getCurrentUser().getUid());
-
     }
 
     // --------------------

@@ -2,10 +2,12 @@ package com.deguffroy.adrien.go4lunch.Utils;
 
 import android.util.Log;
 
+import com.deguffroy.adrien.go4lunch.Models.AutoComplete.AutoCompleteResult;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -47,5 +49,24 @@ public class PlacesStreams {
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
               .timeout(10, TimeUnit.SECONDS);
+    }
+
+    public static Observable<AutoCompleteResult> streamFetchAutoComplete(String query, String location, int radius, String apiKey){
+        return mapPlacesInfo.getPlaceAutoComplete(query, location, radius, apiKey)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10,TimeUnit.SECONDS);
+    }
+
+    public static  Observable<List<PlaceDetailsResults>> streamFetchAutoCompleteInfo(String query, String location, int radius, String apiKey){
+        return mapPlacesInfo.getPlaceAutoComplete(query, location, radius, apiKey)
+                .flatMapIterable(AutoCompleteResult::getPredictions)
+                .flatMap(info -> mapPlacesInfo.getPlacesInfo(info.getPlaceId(), apiKey))
+                .map(PlaceDetailsInfo::getResult)
+                .toList()
+                .toObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS);
     }
 }

@@ -50,5 +50,20 @@
     <string name="restaurant_detail_recyclerview">%1$s se joint à nous !</string>
     <string name="no_restaurant_error_message">Aucun restaurant trouvé, essayez de modifier les paramètres de votre rayon de recherche</string>
     <string name="drawer_no_restaurant_booked">Vous n\'avez pas réservé de restaurant pour aujourd\'hui !</string>
-    <string name="toolbar_search_hint">Entrez un nom de restaurant</string>
+    <string name="toolbar_search_hint">Recherche</string>
+    <string name="chat">Chat</string>
+    <string name="bottom_menu_chat">Chat</string>
+    <string name="restaurant_item_dislike">JE N\'AIME PAS</string>
+    <string name="restaurant_like_ok">Vous avez aimé ce restaurant !</string>
+    <string name="restaurant_like_ko">Erreur, veuillez réessayer plus tard</string>
+    <string name="restaurant_dislike_ok">Vous n\'aimez pas ce restaurant !</string>
+    <string name="toolbar_search_title">Recherche de restaurants</string>
+    <string name="restaurant_error_retrieving_info">Impossible de récupérer les informations de l\'utilisateur</string>
+    <string name="restaurant_cancel_booking">Vous avez annulé votre réservation pour ce restaurant !</string>
+    <string name="settings_save_text">Enregistrer</string>
+    <string name="notification_message">Voici un rappel de votre choix pour aujourd\'hui</string>
+    <string name="notification_message_big">Voici un rappel de votre choix pour aujourd\'hui : %1$s %2$s. Collègues participants : %3$s</string>
+    <string name="notification_message_no_workmates">Aucuns</string>
+    <string name="search_no_result">Aucun restaurant ne correspond à votre requête</string>
+    <string name="search_too_short">Votre requête doit être de 3 caractères minimum</string>
 </resources>

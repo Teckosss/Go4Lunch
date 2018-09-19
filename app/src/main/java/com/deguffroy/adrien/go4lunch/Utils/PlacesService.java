@@ -1,8 +1,10 @@
 package com.deguffroy.adrien.go4lunch.Utils;
 
+import com.deguffroy.adrien.go4lunch.Models.AutoComplete.AutoCompleteResult;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.Result;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -32,6 +34,9 @@ public interface PlacesService {
 
     @GET("details/json")
     Observable<PlaceDetailsInfo> getPlacesInfo(@Query("placeid") String placeId, @Query("key") String key);
+
+    @GET("autocomplete/json?strictbounds")
+    Observable<AutoCompleteResult> getPlaceAutoComplete(@Query("input") String query, @Query("location") String location, @Query("radius") int radius, @Query("key") String apiKey );
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/maps/api/place/")
