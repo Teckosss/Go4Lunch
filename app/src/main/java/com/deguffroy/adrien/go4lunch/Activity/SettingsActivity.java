@@ -5,10 +5,15 @@ import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +24,7 @@ import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.R;
+import com.deguffroy.adrien.go4lunch.Utils.MinMaxFilters;
 import com.deguffroy.adrien.go4lunch.Utils.Notifications.AlarmReceiver;
 import com.deguffroy.adrien.go4lunch.Utils.Notifications.NotificationHelper;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
@@ -38,10 +44,17 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @BindView(R.id.simple_toolbar) Toolbar mToolbar;
     @BindView(R.id.settings_switch) Switch mSwitch;
     @BindView(R.id.settings_save) Button mButtonSave;
-    @BindView(R.id.settings_zoom_edit) EditText mZoomEdit;
-    @BindView(R.id.settings_radius_edit) EditText mRadiusEdit;
+    @BindView(R.id.settings_radius_edit_text) TextInputEditText mRadiusEditText;
+    @BindView(R.id.settings_zoom_edit_text) TextInputEditText mZoomEditText;
+    @BindView(R.id.settings_zoom_edit_layout) TextInputLayout mZoomEditLayout;
+    @BindView(R.id.settings_radius_edit_layout) TextInputLayout mRadiusEditLayout;
 
     private NotificationHelper mNotificationHelper;
+
+    private static final String ZOOM_MIN_VALUE = "6";
+    private static final String ZOOM_MAX_VALUE = "18";
+    private static final String RADIUS_MIN_VALUE = "150";
+    private static final String RADIUS_MAX_VALUE = "10000";
 
     protected CommunicationViewModel mViewModel;
 
@@ -57,7 +70,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
         this.configureToolbar();
         this.retrieveUserSettings();
-        this.setOnClickListener();
+        this.setListenerAndFilters();
         this.createNotificationHelper();
     }
 
@@ -82,8 +95,10 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     Log.e("TAG", "Current data: " + documentSnapshot.getData());
-                    mZoomEdit.setText(documentSnapshot.getData().get("defaultZoom").toString());
-                    mRadiusEdit.setText(documentSnapshot.getData().get("searchRadius").toString());
+
+                    mZoomEditText.setText(documentSnapshot.getData().get("defaultZoom").toString());
+                    mRadiusEditText.setText(documentSnapshot.getData().get("searchRadius").toString());
+
                     if (documentSnapshot.getData().get("notificationOn").equals(true)){
                         mSwitch.setChecked(true);
                         mNotificationHelper.scheduleRepeatingNotification();
@@ -100,9 +115,12 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
-    private void setOnClickListener(){
+    private void setListenerAndFilters(){
         mButtonSave.setOnClickListener(this);
         mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> { });
+
+        mZoomEditText.setFilters(new InputFilter[]{new MinMaxFilters(ZOOM_MIN_VALUE,ZOOM_MAX_VALUE)});
+        mRadiusEditText.setFilters(new InputFilter[]{new MinMaxFilters(RADIUS_MIN_VALUE,RADIUS_MAX_VALUE)});
     }
 
     private void createNotificationHelper(){
@@ -113,22 +131,53 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.settings_save:
-               this.saveSettings();
+                this.saveSettings();
                 break;
         }
     }
 
     private void saveSettings(){
-        int zoom = Integer.parseInt(mZoomEdit.getText().toString());
-        int radius = Integer.parseInt(mRadiusEdit.getText().toString());
+        boolean error = false;
+        int zoom = MainActivity.DEFAULT_ZOOM;
+        int radius = MainActivity.DEFAULT_SEARCH_RADIUS;
+        if (!(mZoomEditText.getText().toString().equals(""))){
+            zoom = Integer.parseInt(mZoomEditText.getText().toString());
+            if (zoom < Integer.parseInt(ZOOM_MIN_VALUE) || zoom > Integer.parseInt(ZOOM_MAX_VALUE)){
+                mZoomEditLayout.setError(getResources().getString(R.string.settings_save_error_zoom,ZOOM_MIN_VALUE,ZOOM_MAX_VALUE));
+                error = true;
+            }else{
+                mZoomEditLayout.setError(null);
+            }
+        }else{
+            mZoomEditLayout.setError(getResources().getString(R.string.settings_save_error_zoom,ZOOM_MIN_VALUE,ZOOM_MAX_VALUE));
+            error = true;
+        }
+
+        if (!(mRadiusEditText.getText().toString().equals(""))){
+            radius = Integer.parseInt(mRadiusEditText.getText().toString());
+            if (radius < Integer.parseInt(RADIUS_MIN_VALUE) || radius > Integer.parseInt(RADIUS_MAX_VALUE)){
+                mRadiusEditLayout.setError(getResources().getString(R.string.settings_save_error_radius,RADIUS_MIN_VALUE,RADIUS_MAX_VALUE));
+                error = true;
+            }else{
+                mRadiusEditLayout.setError(null);
+            }
+        }else{
+            mRadiusEditLayout.setError(getResources().getString(R.string.settings_save_error_radius,RADIUS_MIN_VALUE,RADIUS_MAX_VALUE));
+            error = true;
+        }
+
         if (mSwitch.isChecked()){
             mNotificationHelper.scheduleRepeatingNotification();
         }else{
             mNotificationHelper.cancelAlarmRTC();
         }
-        UserHelper.updateUserSettings(getCurrentUser().getUid(),zoom,mSwitch.isChecked(),radius).addOnSuccessListener(
-                updateTask -> Toast.makeText(this, "Document successfully updated!", Toast.LENGTH_SHORT).show()
-        );
+        if (!(error)){
+            UserHelper.updateUserSettings(getCurrentUser().getUid(),zoom,mSwitch.isChecked(),radius).addOnSuccessListener(
+                    updateTask ->{
+                        Log.e("SETTINGS_ACTIVITY", "saveSettings: DONE" );
+                        Toast.makeText(this, getResources().getString(R.string.settings_save_ok), Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
 }

@@ -15,6 +15,9 @@ import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Arrays;
 
@@ -60,7 +63,7 @@ public class LoginActivity extends BaseActivity {
                                 Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build(),      // GOOGLE
                                         new AuthUI.IdpConfig.FacebookBuilder().build()))         // FACEBOOK
                         .setIsSmartLockEnabled(false, true)
-                        .setLogo(R.drawable.meal)
+                        .setLogo(R.drawable.meal_v3_final)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -73,14 +76,16 @@ public class LoginActivity extends BaseActivity {
     private void createUserInFirestore(){
 
         if (this.getCurrentUser() != null){
-            Log.e("TAG", "createUserInFirestore: LOGGED" );
+            Log.e("LOGIN_ACTIVITY", "createUserInFirestore: LOGGED" );
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
             String uid = this.getCurrentUser().getUid();
             this.mViewModel.updateCurrentUserUID(uid);
+            this.mViewModel.updateCurrentUserZoom(DEFAULT_ZOOM);
+            this.mViewModel.updateCurrentUserRadius(DEFAULT_SEARCH_RADIUS);
             UserHelper.createUser(uid, username, urlPicture, DEFAULT_SEARCH_RADIUS, DEFAULT_ZOOM, DEFAULT_NOTIFICATION).addOnFailureListener(this.onFailureListener());
         }else{
-            Log.e("TAG", "createUserInFirestore: NOT LOGGED" );
+            Log.e("LOGIN_ACTIVITY", "createUserInFirestore: NOT LOGGED" );
         }
     }
 
@@ -95,7 +100,7 @@ public class LoginActivity extends BaseActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
                 this.createUserInFirestore();
-                this.launchMainActivity();
+                launchMainActivity();
             } else { // ERRORS
                 if (response == null) {
                     Toast.makeText(this, getString(R.string.error_authentication_canceled), Toast.LENGTH_SHORT).show();
@@ -113,7 +118,7 @@ public class LoginActivity extends BaseActivity {
     // ACTION
     // --------------------
 
-    private void launchMainActivity(){
+    private void launchMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

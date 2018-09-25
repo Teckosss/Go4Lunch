@@ -97,7 +97,6 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
     private static final String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     public static final String API_KEY = BuildConfig.google_maps_api_key;
     public static final String SEARCH_TYPE = "restaurant";
-    public static final int RADIUS = 1500;
 
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -116,24 +115,27 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewModel = ViewModelProviders.of(getActivity()).get(CommunicationViewModel.class);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, rootView);
 
-        mViewModel = ViewModelProviders.of(getActivity()).get(CommunicationViewModel.class);
-        mViewModel.currentUserPosition.observe(this, new Observer<LatLng>() {
-            @Override
-            public void onChanged(@Nullable LatLng latLng) {
-                executeHttpRequestWithRetrofit();
-            }
+        setHasOptionsMenu(true);
+        mViewModel.currentUserPosition.observe(this, latLng -> {
+            executeHttpRequestWithRetrofit();
         });
+
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         this.configureMapView();
         this.configureGoogleApiClient();
         this.configureLocationRequest();
         this.configureLocationCallBack();
-        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -157,7 +159,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() > 2 ){
-                    disposable = PlacesStreams.streamFetchAutoCompleteInfo(query,mViewModel.getCurrentUserPositionFormatted(),RADIUS,API_KEY).subscribeWith(createObserver());
+                    disposable = PlacesStreams.streamFetchAutoCompleteInfo(query,mViewModel.getCurrentUserPositionFormatted(),mViewModel.getCurrentUserRadius(),API_KEY).subscribeWith(createObserver());
                 }else{
                     Toast.makeText(getContext(), getResources().getString(R.string.search_too_short), Toast.LENGTH_LONG).show();
                 }
@@ -189,7 +191,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
             @Override
             public boolean onQueryTextChange(String query) {
                 if (query.length() > 2){
-                    disposable = PlacesStreams.streamFetchAutoCompleteInfo(query,mViewModel.getCurrentUserPositionFormatted(),RADIUS,API_KEY).subscribeWith(createObserver());
+                    disposable = PlacesStreams.streamFetchAutoCompleteInfo(query,mViewModel.getCurrentUserPositionFormatted(),mViewModel.getCurrentUserRadius(),API_KEY).subscribeWith(createObserver());
                 }
                 return false;
             }
@@ -215,6 +217,12 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
             mGoogleApiClient.stopAutoManage(getActivity());
             mGoogleApiClient.disconnect();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mViewModel.currentUserPosition.removeObservers(this);
     }
 
     @Override
@@ -265,7 +273,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
         this.mViewModel.updateCurrentUserPosition(new LatLng(currentLatitude, currentLongitude));
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(this.mViewModel.getCurrentUserPosition()));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.mViewModel.getCurrentUserPosition(), MainActivity.DEFAULT_ZOOM));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(this.mViewModel.getCurrentUserPosition(), mViewModel.getCurrentUserZoom()));
         stopLocationUpdates();
     }
 
@@ -339,7 +347,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
                     });
                 }
             }else{
-                Toast.makeText(getContext(), getResources().getString(R.string.search_no_result), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.no_restaurant_error_message), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -352,7 +360,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
     private void executeHttpRequestWithRetrofit(){
         String location = mViewModel.getCurrentUserPositionFormatted();
         Log.e(TAG, "Location : "+location );
-        this.disposable = PlacesStreams.streamFetchNearbyPlaces(location,MainActivity.DEFAULT_SEARCH_RADIUS,SEARCH_TYPE,API_KEY).subscribeWith(createObserver());
+        this.disposable = PlacesStreams.streamFetchNearbyPlaces(location,mViewModel.getCurrentUserRadius(),SEARCH_TYPE,API_KEY).subscribeWith(createObserver());
     }
 
     private <T> DisposableObserver<T> createObserver(){

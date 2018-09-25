@@ -41,7 +41,9 @@
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/label_settings"
-            android:parentActivityName=".Activity.MainActivity" />
+            android:parentActivityName=".Activity.MainActivity">
+        </activity>
+
         <activity
             android:name=".Activity.WebViewActivity"
             android:label="@string/label_website"

@@ -12,77 +12,70 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/settings_zoom_text"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/settings_zoom_edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/settings_zoom_text"
-        android:layout_margin="@dimen/margin_to_parent"
-        app:layout_constraintTop_toBottomOf="@+id/simple_toolbar"
+        android:hint="@string/settings_zoom_title"
+        android:layout_marginTop="@dimen/double_margin"
+        android:layout_marginStart="@dimen/margin_to_parent"
+        android:layout_marginEnd="@dimen/margin_to_parent"
+        app:errorEnabled="true"
+        app:helperTextEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/simple_toolbar">
 
-    <EditText
-        android:id="@+id/settings_zoom_edit"
-        android:layout_width="wrap_content"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/settings_zoom_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/settings_radius_edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_to_parent"
-        app:layout_constraintStart_toEndOf="@+id/settings_zoom_text"
-        app:layout_constraintTop_toTopOf="@id/settings_zoom_text"
-        app:layout_constraintBottom_toBottomOf="@id/settings_zoom_text"
-        />
-
-    <TextView
-        android:id="@+id/settings_radius_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_search_radius_text"
-        android:layout_margin="@dimen/margin_to_parent"
-        app:layout_constraintTop_toBottomOf="@id/settings_zoom_edit"
+        android:hint="@string/settings_search_radius_title"
+        app:errorEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/settings_zoom_edit_layout">
 
-    <EditText
-        android:id="@+id/settings_radius_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_to_parent"
-        app:layout_constraintStart_toEndOf="@+id/settings_radius_text"
-        app:layout_constraintTop_toTopOf="@id/settings_radius_text"
-        app:layout_constraintBottom_toBottomOf="@id/settings_radius_text"
-        />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/settings_radius_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            />
 
-    <TextView
-        android:id="@+id/settings_notifications_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_notification_text"
-        android:layout_margin="@dimen/margin_to_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/settings_radius_edit"
-        />
+    </android.support.design.widget.TextInputLayout>
 
     <Switch
         android:id="@+id/settings_switch"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="18sp"
         android:layout_margin="@dimen/margin_to_parent"
-        app:layout_constraintStart_toEndOf="@id/settings_notifications_text"
-        app:layout_constraintTop_toTopOf="@id/settings_notifications_text"
-        app:layout_constraintBottom_toBottomOf="@id/settings_notifications_text"
-        />
+        android:switchPadding="@dimen/margin_to_parent"
+        android:text="@string/settings_notification_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_radius_edit_layout" />
 
     <Button
         android:id="@+id/settings_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="@dimen/margin_to_parent"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@color/colorWhite"
         android:text="@string/settings_save_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/settings_switch" />
 
 </android.support.constraint.ConstraintLayout>

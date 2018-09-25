@@ -27,11 +27,11 @@ public class ListViewModel extends ViewModel {
 
     public void streamFetchPlaceInfo(String location, int radius, String type, String key){
         this.disposable.add(PlacesStreams.streamFetchPlaceInfo(location, radius, type, key)
-                .doOnSubscribe(sub -> isLoading.setValue(true))
-                .doOnComplete(() -> isLoading.setValue(false))
-                .doOnError(error -> isLoading.setValue(false))
-                .subscribe((List<PlaceDetailsResults>result) -> places.setValue(result),
-                        (Throwable error) -> this.error.setValue(error)));
+                .doOnSubscribe(sub -> isLoading.postValue(true))
+                .doOnComplete(() -> isLoading.postValue(false))
+                .doOnError(error -> isLoading.postValue(false))
+                .subscribe((List<PlaceDetailsResults>result) -> places.postValue(result),
+                        (Throwable error) -> this.error.postValue(error)));
     }
 
 }

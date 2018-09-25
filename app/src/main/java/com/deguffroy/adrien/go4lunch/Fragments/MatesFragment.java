@@ -13,6 +13,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -41,7 +43,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MatesFragment extends Fragment {
+public class MatesFragment extends BaseFragment {
 
     @BindView(R.id.mates_recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.mates_swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
@@ -62,6 +64,8 @@ public class MatesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mates, container, false);
         ButterKnife.bind(this, view);
 
+        setHasOptionsMenu(true);
+
         mViewModel = ViewModelProviders.of(getActivity()).get(CommunicationViewModel.class);
         mViewModel.currentUserUID.observe(this, new Observer<String>() {
             @Override
@@ -74,6 +78,12 @@ public class MatesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 
     // -----------------
@@ -131,12 +141,6 @@ public class MatesFragment extends Fragment {
         startActivity(intent);
     }
 
-    private String getTodayDate(){
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        return df.format(c.getTime());
-    }
-
     // --------------------
     // UI
     // --------------------
@@ -162,6 +166,10 @@ public class MatesFragment extends Fragment {
                 Log.e("TAG", "Error getting documents: ", task.getException());
             }
             mMatesAdapter.notifyDataSetChanged();
-        });
+        })
+                .addOnFailureListener(e -> {
+                    getActivity().runOnUiThread(() -> mSwipeRefreshLayout.setRefreshing(false));
+                    handleError(e);
+                });
     }
 }

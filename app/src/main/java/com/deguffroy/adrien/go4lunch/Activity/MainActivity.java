@@ -1,8 +1,6 @@
 package com.deguffroy.adrien.go4lunch.Activity;
 
-import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,18 +12,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.common.api.Status;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -35,22 +29,14 @@ import com.deguffroy.adrien.go4lunch.Fragments.ListFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
 import com.deguffroy.adrien.go4lunch.Fragments.MatesFragment;
 import com.deguffroy.adrien.go4lunch.R;
-import com.deguffroy.adrien.go4lunch.Utils.BottomNavigationViewHelper;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -251,7 +237,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void configureBottomView(){
-        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
         mBottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -284,6 +269,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void retrieveCurrentUser(){
         mViewModel = ViewModelProviders.of(this).get(CommunicationViewModel.class);
         this.mViewModel.updateCurrentUserUID(getCurrentUser().getUid());
+        UserHelper.getUsersCollection().document(getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("MAIN_ACTIVITY", "Listen failed.", e);
+                    return;
+                }
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Log.e("MAIN_ACTIVITY", "Current data: " + documentSnapshot.getData());
+                    mViewModel.updateCurrentUserZoom(Integer.parseInt(documentSnapshot.getData().get("defaultZoom").toString()));
+                    mViewModel.updateCurrentUserRadius(Integer.parseInt(documentSnapshot.getData().get("searchRadius").toString()));
+                } else {
+                    Log.e("MAIN_ACTIVITY", "Current data: null");
+                }
+            }
+        });
     }
 
     // --------------------

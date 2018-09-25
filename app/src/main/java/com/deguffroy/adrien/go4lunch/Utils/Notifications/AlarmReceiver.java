@@ -52,7 +52,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.mContext = context;
-        Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
         usersList = new ArrayList<>();
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
             RestaurantsHelper.getBooking(FirebaseAuth.getInstance().getCurrentUser().getUid(),getTodayDate()).addOnCompleteListener(restaurantTask -> {

@@ -50,16 +50,16 @@ public class NotificationHelper {
         alarmManagerRTC = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
         // UNCOMMENT TO SEND IMMEDIATELY
-        //alarmManagerRTC.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000 * 5, AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntentRTC);
-        alarmManagerRTC.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntentRTC);
+        alarmManagerRTC.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000 * 5, AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntentRTC);
+        //alarmManagerRTC.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntentRTC);
 
-        Toast.makeText(mContext, "Alarm scheduled!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "Alarm scheduled!", Toast.LENGTH_SHORT).show();
     }
 
     public void cancelAlarmRTC() {
         if (alarmManagerRTC!= null) {
             alarmManagerRTC.cancel(alarmIntentRTC);
-            Toast.makeText(mContext, "Alarm canceled!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "Alarm canceled!", Toast.LENGTH_SHORT).show();
         }
     }
 }

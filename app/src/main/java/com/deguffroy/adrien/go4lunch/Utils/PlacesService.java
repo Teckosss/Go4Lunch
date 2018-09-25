@@ -29,13 +29,13 @@ public interface PlacesService {
     //https://maps.googleapis.com/maps/api/place/photo?photoreference=CmRaAAAAi8gLNJVwnnzV-3lQSlgSjx03IaUenRFSfP7geD2hQdsZriJQBxqm9HJ1udK4ZrD1KQwxpE0-qwjtOEcTF2F594RclQQNVtQB2_S3FQ_Du8xQLI6jwRiYBqRWyrVnMUnsEhA0OtBDmtdBRYSuJbA4ii_6GhQWS-aDcY-HBjKZiqEqh7qyxhbazA&key=AIzaSyAUayt1xNiRgY4sCb5Zw0XpofM18nY7pt8
 
 
-    @GET("nearbysearch/json")
+    @GET("nearbysearch/json?")
     Observable<MapPlacesInfo> getNearbyPlaces(@Query("location") String location, @Query("radius") int radius, @Query("type") String type, @Query("key") String key);
 
     @GET("details/json")
     Observable<PlaceDetailsInfo> getPlacesInfo(@Query("placeid") String placeId, @Query("key") String key);
 
-    @GET("autocomplete/json?strictbounds")
+    @GET("autocomplete/json?strictbounds&types=establishment")
     Observable<AutoCompleteResult> getPlaceAutoComplete(@Query("input") String query, @Query("location") String location, @Query("radius") int radius, @Query("key") String apiKey );
 
     Retrofit retrofit = new Retrofit.Builder()
