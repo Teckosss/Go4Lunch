@@ -7,6 +7,7 @@
 
     <!-- POPUP TITLE PERM -->
     <string name="popup_title_perm_access">This application need permissions to work correctly.</string>
+    <string name="popup_title_permission_files_access">This application needs permissions to access your images</string>
 
     <!-- TOOLBAR -->
     <string name="hungry">I\'m Hungry!</string>
@@ -107,6 +108,7 @@
     <!-- CHAT ACTIVITY -->
     <string name="chat_input_text_hint">Compose your message</string>
     <string name="chat_send_button">Send</string>
+    <string name="chat_no_image_chosen">No image chosen</string>
 
     <!-- ACTIVITY LABEL -->
     <string name="label_settings">Settings</string>

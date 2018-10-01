@@ -1,17 +1,14 @@
 package com.deguffroy.adrien.go4lunch.Views;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
-import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.Result;
 import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

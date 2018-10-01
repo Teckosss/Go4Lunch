@@ -58,6 +58,7 @@
             android:adjustViewBounds="true"
             android:src="@drawable/baseline_add_circle_black_24"
             android:tint="@color/colorPrimaryDark"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.design.widget.TextInputEditText

@@ -72,4 +72,6 @@
     <string name="settings_save_error_zoom">Le minimum est %1$s, le maximum est %2$s</string>
     <string name="settings_save_error_radius">Le minimum est %1$s, le maximum est %2$s</string>
     <string name="settings_save_ok">Paramètres enregistrés !</string>
+    <string name="popup_title_permission_files_access">L\'application a besoin de permissions pour fonctionner correctement.</string>
+    <string name="chat_no_image_chosen">Aucune images choisis</string>
 </resources>

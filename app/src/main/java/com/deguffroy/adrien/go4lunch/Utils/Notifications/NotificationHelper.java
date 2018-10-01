@@ -1,20 +1,9 @@
 package com.deguffroy.adrien.go4lunch.Utils.Notifications;
 
-import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
-
-import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
-import com.deguffroy.adrien.go4lunch.R;
 
 import java.util.Calendar;
 
@@ -53,13 +42,11 @@ public class NotificationHelper {
         alarmManagerRTC.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000 * 5, AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntentRTC);
         //alarmManagerRTC.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntentRTC);
 
-        //Toast.makeText(mContext, "Alarm scheduled!", Toast.LENGTH_SHORT).show();
     }
 
     public void cancelAlarmRTC() {
         if (alarmManagerRTC!= null) {
             alarmManagerRTC.cancel(alarmIntentRTC);
-            //Toast.makeText(mContext, "Alarm canceled!", Toast.LENGTH_SHORT).show();
         }
     }
 }

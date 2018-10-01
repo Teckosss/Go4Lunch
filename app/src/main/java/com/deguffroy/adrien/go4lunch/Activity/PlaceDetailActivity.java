@@ -151,7 +151,6 @@ public class PlaceDetailActivity extends BaseActivity implements View.OnClickLis
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:"+requestResult.getFormattedPhoneNumber()));
                     startActivity(intent);
-                    //Toast.makeText(this, "Phone number : " + , Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(this, getResources().getString(R.string.restaurant_detail_no_phone), Toast.LENGTH_SHORT).show();
                 }

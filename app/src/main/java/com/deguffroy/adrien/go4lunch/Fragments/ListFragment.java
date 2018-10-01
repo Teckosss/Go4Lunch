@@ -1,7 +1,6 @@
 package com.deguffroy.adrien.go4lunch.Fragments;
 
 import android.app.SearchManager;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,19 +28,14 @@ import com.deguffroy.adrien.go4lunch.Utils.DividerItemDecoration;
 import com.deguffroy.adrien.go4lunch.Utils.ItemClickSupport;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
-import com.deguffroy.adrien.go4lunch.ViewModels.ListViewModel;
 import com.deguffroy.adrien.go4lunch.Views.RestaurantAdapter;
-import com.google.android.gms.maps.model.LatLng;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
-import retrofit2.HttpException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,28 +117,6 @@ public class ListFragment extends BaseFragment {
                 }else{
                     Toast.makeText(getContext(), getResources().getString(R.string.search_too_short), Toast.LENGTH_LONG).show();
                 }
-
-                /*mGeoDataClient = Places.getGeoDataClient(getContext());
-                Task<AutocompletePredictionBufferResponse> results =
-                        mGeoDataClient.getAutocompletePredictions(query, mBounds, null);
-
-                results.addOnSuccessListener(autocompletePredictions -> {
-                    Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
-                    predictionsCount = autocompletePredictions.getCount();
-                    if (iterator.hasNext()) {
-                        while (iterator.hasNext()) {
-                            AutocompletePrediction prediction = iterator.next();
-                            disposable = PlacesStreams.streamSimpleFetchPlaceInfo(prediction.getPlaceId(),API_KEY).subscribeWith(createObserver());
-                            Log.e(TAG, "onSuccess: " + prediction.getPrimaryText(null) );
-                        }
-                    }else {
-                        Log.e(TAG, "onSuccess: NOTHING" );
-                        //Nothing matches...
-                    }
-                    autocompletePredictions.release();
-                })
-                        .addOnFailureListener(e -> Log.e(TAG, "onFailure: " + e.getLocalizedMessage() ));
-                        */
                 return true;
 
             }
@@ -182,18 +153,15 @@ public class ListFragment extends BaseFragment {
     // ACTION
     // -----------------
 
-    // 1 - Configure item click on RecyclerView
+    // Configure item click on RecyclerView
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(mRecyclerView, R.layout.fragment_list_item)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                .setOnItemClickListener((recyclerView, position, v) -> {
 
-                        PlaceDetailsResults result = adapter.getRestaurant(position);
-                        Intent intent = new Intent(getActivity(),PlaceDetailActivity.class);
-                        intent.putExtra("PlaceDetailResult", result.getPlaceId());
-                        startActivity(intent);
-                    }
+                    PlaceDetailsResults result = adapter.getRestaurant(position);
+                    Intent intent = new Intent(getActivity(),PlaceDetailActivity.class);
+                    intent.putExtra("PlaceDetailResult", result.getPlaceId());
+                    startActivity(intent);
                 });
     }
 
@@ -203,8 +171,7 @@ public class ListFragment extends BaseFragment {
 
     private void executeHttpRequestWithRetrofit(){
         mSwipeRefreshLayout.setRefreshing(true);
-        //this.disposable = PlacesStreams.streamFetchNearbyPlaces(mCommunicationViewModel.getCurrentUserPositionFormatted(), MainActivity.DEFAULT_SEARCH_RADIUS, MapFragment.SEARCH_TYPE,MapFragment.API_KEY).subscribeWith(createObserver());
-       this.disposable = PlacesStreams.streamFetchPlaceInfo(mViewModel.getCurrentUserPositionFormatted(), mViewModel.getCurrentUserRadius(), MapFragment.SEARCH_TYPE,MapFragment.API_KEY).subscribeWith(createObserver());
+        this.disposable = PlacesStreams.streamFetchPlaceInfo(mViewModel.getCurrentUserPositionFormatted(), mViewModel.getCurrentUserRadius(), MapFragment.SEARCH_TYPE,MapFragment.API_KEY).subscribeWith(createObserver());
     }
 
     private <T> DisposableObserver<T> createObserver(){

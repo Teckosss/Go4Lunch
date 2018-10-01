@@ -1,5 +1,6 @@
 package com.deguffroy.adrien.go4lunch.Views;
 
+import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -15,9 +16,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.deguffroy.adrien.go4lunch.Models.Message;
 import com.deguffroy.adrien.go4lunch.R;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,7 +68,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder{
         this.textViewMessage.setTextAlignment(isCurrentUser ? View.TEXT_ALIGNMENT_TEXT_END : View.TEXT_ALIGNMENT_TEXT_START);
 
         // Update date TextView
-        if (message.getDateCreated() != null) this.textViewDate.setText(this.convertDateToHour(message.getDateCreated()));
+        if (message.getDateCreated() != null) this.textViewDate.setText(this.convertDateToHour(message.getDateCreated(), itemView.getContext()));
 
         // Update profile picture ImageView
         if (message.getUserSender().getUrlPicture() != null)
@@ -113,8 +114,13 @@ public class ChatViewHolder extends RecyclerView.ViewHolder{
 
     // ---
 
-    private String convertDateToHour(Date date){
-        DateFormat dfTime = new SimpleDateFormat("HH:mm");
-        return dfTime.format(date);
+    private String convertDateToHour(Date date, Context context){
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+            return dateFormat.format(date);
+        }else{
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy h.mm a", Locale.getDefault());
+            return dateFormat.format(date);
+        }
     }
 }

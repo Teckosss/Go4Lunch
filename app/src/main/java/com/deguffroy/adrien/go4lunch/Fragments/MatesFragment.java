@@ -1,6 +1,5 @@
 package com.deguffroy.adrien.go4lunch.Fragments;
 
-
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -32,9 +31,7 @@ import com.deguffroy.adrien.go4lunch.Views.MatesAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -108,16 +105,13 @@ public class MatesFragment extends BaseFragment {
     // ACTION
     // -----------------
 
-    // 1 - Configure item click on RecyclerView
+    // Configure item click on RecyclerView
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(mRecyclerView, R.layout.fragment_mates_item)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                .setOnItemClickListener((recyclerView, position, v) -> {
 
-                        User result = mMatesAdapter.getMates(position);
-                        retrieveBookedRestaurantByUser(result);
-                    }
+                    User result = mMatesAdapter.getMates(position);
+                    retrieveBookedRestaurantByUser(result);
                 });
     }
 
@@ -145,7 +139,7 @@ public class MatesFragment extends BaseFragment {
     // UI
     // --------------------
 
-    // 1 - Update UI when activity is creating
+    // Update UI when activity is creating
     private void updateUIWhenCreating(){
         this.mSwipeRefreshLayout.setRefreshing(true);
         CollectionReference collectionReference = UserHelper.getUsersCollection();

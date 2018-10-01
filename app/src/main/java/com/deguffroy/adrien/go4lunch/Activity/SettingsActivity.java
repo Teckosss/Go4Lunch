@@ -1,45 +1,34 @@
 package com.deguffroy.adrien.go4lunch.Activity;
 
 import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.MinMaxFilters;
-import com.deguffroy.adrien.go4lunch.Utils.Notifications.AlarmReceiver;
 import com.deguffroy.adrien.go4lunch.Utils.Notifications.NotificationHelper;
 import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.util.Calendar;
-
 import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class SettingsActivity extends BaseActivity implements View.OnClickListener {
+public class SettingsActivity extends BaseActivity {
 
     @BindView(R.id.simple_toolbar) Toolbar mToolbar;
     @BindView(R.id.settings_switch) Switch mSwitch;
@@ -116,9 +105,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void setListenerAndFilters(){
-        mButtonSave.setOnClickListener(this);
         mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> { });
-
         mZoomEditText.setFilters(new InputFilter[]{new MinMaxFilters(ZOOM_MIN_VALUE,ZOOM_MAX_VALUE)});
         mRadiusEditText.setFilters(new InputFilter[]{new MinMaxFilters(RADIUS_MIN_VALUE,RADIUS_MAX_VALUE)});
     }
@@ -127,16 +114,8 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mNotificationHelper = new NotificationHelper(getBaseContext());
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.settings_save:
-                this.saveSettings();
-                break;
-        }
-    }
-
-    private void saveSettings(){
+    @OnClick(R.id.settings_save)
+    public void saveSettings(){
         boolean error = false;
         int zoom = MainActivity.DEFAULT_ZOOM;
         int radius = MainActivity.DEFAULT_SEARCH_RADIUS;

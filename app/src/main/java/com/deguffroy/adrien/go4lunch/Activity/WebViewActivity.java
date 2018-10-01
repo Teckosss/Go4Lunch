@@ -5,7 +5,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -60,7 +59,6 @@ public class WebViewActivity extends AppCompatActivity {
             mSwipeRefreshLayout.setRefreshing(false);
         }else{
             mSwipeRefreshLayout.setRefreshing(false);
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -10,15 +10,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
 import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
 import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.Fragments.MapFragment;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsInfo;
-import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
-import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
 import com.deguffroy.adrien.go4lunch.Utils.PlacesStreams;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +49,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.mContext = context;
-        //Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
         usersList = new ArrayList<>();
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
             RestaurantsHelper.getBooking(FirebaseAuth.getInstance().getCurrentUser().getUid(),getTodayDate()).addOnCompleteListener(restaurantTask -> {
@@ -76,7 +72,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                             }
                                         });
                                     }
-                                    Log.e("TAG", "onReceive: 3 " + usersList.toString() );
+                                    Log.e("TAG", "onReceive: " + usersList.toString() );
 
                                 }
                             });
@@ -187,7 +183,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void disposeWhenComplete(){
-        //Log.e("TAG", "disposeWhenComplete: TRUE" );
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
 }

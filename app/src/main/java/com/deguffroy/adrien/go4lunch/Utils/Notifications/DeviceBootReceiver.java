@@ -19,7 +19,7 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             this.setAlarmRepeating(context);
-            Toast.makeText(context, "Alarm Set", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Alarm Set", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -33,7 +33,6 @@ public class DeviceBootReceiver extends BroadcastReceiver {
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 12);
 
-        /* Repeating on every 20 minutes interval */
         manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), SettingsActivity.INTERVAL, pendingIntent);
     }
 }

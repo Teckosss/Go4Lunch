@@ -2,16 +2,12 @@ package com.deguffroy.adrien.go4lunch.Activity;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.R;
-import com.deguffroy.adrien.go4lunch.ViewModels.CommunicationViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;

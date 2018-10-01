@@ -3,7 +3,6 @@ package com.deguffroy.adrien.go4lunch.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,10 +25,8 @@ import android.widget.Toast;
 
 import com.deguffroy.adrien.go4lunch.Activity.PlaceDetailActivity;
 import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
-import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.deguffroy.adrien.go4lunch.BuildConfig;
 import com.deguffroy.adrien.go4lunch.Activity.MainActivity;
-import com.deguffroy.adrien.go4lunch.Models.AutoComplete.AutoCompleteResult;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.MapPlacesInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsInfo;
 import com.deguffroy.adrien.go4lunch.Models.PlacesInfo.PlacesDetails.PlaceDetailsResults;
@@ -45,12 +41,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBuffer;
-import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -58,22 +48,11 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.maps.android.SphericalUtil;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.SocketTimeoutException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -81,9 +60,6 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import pub.devrel.easypermissions.EasyPermissions;
-import retrofit2.HttpException;
-
-import static com.deguffroy.adrien.go4lunch.Activity.MainActivity.TITLE_HUNGRY;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,9 +80,6 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
     private Disposable disposable;
-
-    private List<PlaceDetailsInfo> mInfoList = new ArrayList<>();
-    private int predictionsCount;
 
     private CommunicationViewModel mViewModel;
 
@@ -163,28 +136,6 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
                 }else{
                     Toast.makeText(getContext(), getResources().getString(R.string.search_too_short), Toast.LENGTH_LONG).show();
                 }
-
-                /*mGeoDataClient = Places.getGeoDataClient(getContext());
-                Task<AutocompletePredictionBufferResponse> results =
-                        mGeoDataClient.getAutocompletePredictions(query, mBounds, null);
-
-                results.addOnSuccessListener(autocompletePredictions -> {
-                    Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
-                    predictionsCount = autocompletePredictions.getCount();
-                    if (iterator.hasNext()) {
-                        while (iterator.hasNext()) {
-                            AutocompletePrediction prediction = iterator.next();
-                            disposable = PlacesStreams.streamSimpleFetchPlaceInfo(prediction.getPlaceId(),API_KEY).subscribeWith(createObserver());
-                            Log.e(TAG, "onSuccess: " + prediction.getPrimaryText(null) );
-                        }
-                    }else {
-                        Log.e(TAG, "onSuccess: NOTHING" );
-                        //Nothing matches...
-                    }
-                    autocompletePredictions.release();
-                })
-                        .addOnFailureListener(e -> Log.e(TAG, "onFailure: " + e.getLocalizedMessage() ));
-                        */
                 return true;
 
             }
@@ -203,9 +154,7 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
         super.onResume();
         mMapView.onResume();
         if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect(); } else {
-            Log.i(TAG, "Location services connected.");
-        }
+            mGoogleApiClient.connect(); }
     }
 
     @Override
@@ -351,7 +300,6 @@ public class MapFragment extends BaseFragment implements GoogleApiClient.OnConne
             }
         }
     }
-
 
     // -------------------
     // HTTP (RxJAVA)

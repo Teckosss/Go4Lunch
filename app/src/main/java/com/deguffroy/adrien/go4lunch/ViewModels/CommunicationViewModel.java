@@ -2,9 +2,7 @@ package com.deguffroy.adrien.go4lunch.ViewModels;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 
-import com.deguffroy.adrien.go4lunch.Api.UserHelper;
 import com.google.android.gms.maps.model.LatLng;
 
 /**

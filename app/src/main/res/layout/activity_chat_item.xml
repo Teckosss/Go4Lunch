@@ -41,6 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:paddingStart="@dimen/margin_to_parent"
+            android:paddingEnd="@dimen/margin_to_parent"
             android:background="@drawable/button_radius_primary_color">
 
             <!-- IMAGE SENT -->

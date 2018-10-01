@@ -1,7 +1,6 @@
 package com.deguffroy.adrien.go4lunch.Views;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,10 +8,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
-import com.deguffroy.adrien.go4lunch.Api.RestaurantsHelper;
 import com.deguffroy.adrien.go4lunch.Models.User;
 import com.deguffroy.adrien.go4lunch.R;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,11 +44,5 @@ public class DetailViewHolder extends RecyclerView.ViewHolder {
     private void changeTextColor(int color){
         int mColor = itemView.getContext().getResources().getColor(color);
         this.mTextView.setTextColor(mColor);
-    }
-
-    private String getTodayDate(){
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        return df.format(c.getTime());
     }
 }
